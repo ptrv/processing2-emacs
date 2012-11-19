@@ -5,6 +5,9 @@ Based on Rudolf Olah's version and modification by Bunny Blake.
 https://github.com/emacsmirror/processing-mode
 https://gist.github.com/4083326
 
+The snippets are taken from Sublime Text 2's Processing plugin and converted to yasnippet snippets.
+
+
 ## Setup
 
 In your .emacs file, add this:
