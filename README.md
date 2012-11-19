@@ -2,7 +2,7 @@
 
 Based on Rudolf Olah's version and modification by Bunny Blake.
 
-https://github.com/emacsmirror/processing-mode
+https://github.com/emacsmirror/processing-mode  
 https://gist.github.com/4083326
 
 ## Setup
