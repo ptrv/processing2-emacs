@@ -48,9 +48,14 @@ e.g. /usr/bin/processing-java.")
      "windows"))
   "The platform that Processing is running on. It can be `linux', `macosx' or `windows'.")
 
+(defconst processing-platform-bits
+  (if (string-match "64" system-configuration)
+      "64"
+    "32"))
+
 ;; Functions
 
-(defun processing-make-compile-command (sketch-dir output-dir cmd &optional platform)
+(defun processing-make-compile-command (sketch-dir output-dir cmd &optional platform bits)
   "Returns a string which is the compile-command for Processing
 sketches, targetting the sketch files found in ``sketch-dir'',
 with the output being stored in ``output-dir''. The command flag
@@ -71,20 +76,26 @@ no platform is selected, the default platform that Emacs is
 running on will be selected."
   (concat processing-location
       " --force --sketch=\"" (expand-file-name sketch-dir)
-      "\" --output=\"" (expand-file-name output-dir)
+      ;; "\" --output=\"" (expand-file-name output-dir)
       ;; Remove this comment when Processing implements the --preferences=??? command-line option.
       ;;"\" --preferences=\"" (expand-file-name "~/.processing/preferences.txt")
       "\" --" cmd
-      (if (string= cmd "export-application")
+      (if (string= cmd "export")
           (concat " --platform="
-              (if platform platform (processing-platform))))))
+                  (if platform platform processing-platform)
+                  " --bits="
+                  (if bits bits processing-platform-bits)
+                  " --output=\"" (expand-file-name
+                                  (concat "application."
+                                          (if platform platform processing-platform))) "\"")
+        (concat " --output=\"" (expand-file-name output-dir) "\""))))
 
-(defun processing-commander (sketch-dir output-dir cmd &optional platform)
+(defun processing-commander (sketch-dir output-dir cmd &optional platform bits)
   "Runs the Processing compiler, using a compile-command
 constructed using the ``processing-make-compile-command''
 function."
   (let ((compilation-error-regexp-alist '(processing)))
-    (compile (processing-make-compile-command sketch-dir output-dir cmd platform))))
+    (compile (processing-make-compile-command sketch-dir output-dir cmd platform bits))))
 
 (defun processing-sketch-compile (&optional cmd)
   "Runs the Processing Commander application with the current
@@ -110,7 +121,8 @@ into .class files."
   "Turns the Processing sketch into a Java application. Assumes
 that the platform target is whatever platform Emacs is running
 on."
-  t)
+  (interactive)
+  (processing-sketch-compile "export"))
 
 ;; Add hook so that when processing-mode is loaded, the local variable
 ;; 'compile-command is set.
