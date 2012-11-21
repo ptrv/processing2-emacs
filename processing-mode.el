@@ -32,7 +32,12 @@
 (define-derived-mode processing-mode
   java-mode "Processing"
   "Major mode for Processing.
-\\{java-mode-map}")
+\\{java-mode-map}"
+  (set (make-local-variable 'c-basic-offset) 2)
+  (set (make-local-variable 'tab-width) 2)
+
+  (font-lock-add-keywords 'processing-mode processing-font-lock-keywords)
+  )
 
 (defvar processing-location nil
   "The path to the processing-java command line tool,
@@ -149,26 +154,57 @@ on."
  compilation-error-regexp-alist-alist)
 
 ;; Font-lock, keywords
+(defvar processing-functions
+  '("triangle" "line" "arc" "ellipse" "point" "quad" "rect" "bezier"
+    "bezierDetail" "bezierPoint" "bezierTangent" "curve" "curveDetail"
+    "curvePoint" "curveTangent" "curveTightness" "box" "sphere"
+    "sphereDetail" "background" "size" "fill" "noFill" "stroke"
+    "noStroke" "colorMode" "ellipseMode" "rectMode" "smooth" "noSmooth"
+    "strokeCap" "strokeJoin" "strokeWeight" "noCursor" "random"
+    "randomSeed" "floor" "ceil"))
+
+(defvar processing-constants
+  '("CENTER" "RADIUS" "CORNER" "CORNERS" "HALF_PI" "PI" "QUARTER_PI"
+    "TWO_PI"))
+
+(defvar processing-builtins
+  '("mouseX" "mouseY" "pmouseX" "pmouseY" "mouseButton" "mousePressed"
+    "key" "keyCode" "keyPressed" "width" "height" "frameRate" "frameCount"
+    "displayWidth" "displayHeight"))
+
+(defvar processing-functions-regexp (regexp-opt processing-functions 'words))
+(defvar processing-constants-regexp (regexp-opt processing-constants 'words))
+(defvar processing-builtins-regexp (regexp-opt processing-builtins 'words))
+
 (defconst processing-font-lock-keywords-1
   (eval-when-compile
-    `( ;; Shape functions
-      (,(concat
-     (regexp-opt '("triangle" "line" "arc" "point" "quad" "ellipse"
-               "rect" "curve" "bezier")
-             t)
-     "(") 1 font-lock-function-name-face t)
-      (,(concat
-     (regexp-opt '("strokeWeight" "smooth" "strokeJoin" "noSmooth"
-               "ellipseMode" "rectMode" "background" "stroke")
-             t)
-     "(") 1 font-lock-doc-face t)
-      (,(regexp-opt '("width" "height" "frameRate" "frameCount" "noCursor()" "cursor()")
-            t)
-       . font-lock-constant-face)
-      (,(concat "screen." (regexp-opt '("width" "height") t))
-       1 font-lock-constant-face t)
-      ))
-  "Subdued level highlighting for Processing mode.")
+    `(
+      (,processing-functions-regexp . font-lock-doc-face)
+      (,processing-constants-regexp . font-lock-constant-face)
+      (,processing-builtins-regexp . font-lock-builtin-face)
+      )
+    ))
+
+;; (defconst processing-font-lock-keywords-1
+;;   (eval-when-compile
+;;     `( ;; Shape functions
+;;       (,(concat
+;;      (regexp-opt '("triangle" "line" "arc" "point" "quad" "ellipse"
+;;                "rect" "curve" "bezier")
+;;              t)
+;;      "(") 1 font-lock-function-name-face t)
+;;       (,(concat
+;;      (regexp-opt '("strokeWeight" "smooth" "strokeJoin" "noSmooth"
+;;                "ellipseMode" "rectMode" "background" "stroke")
+;;              t)
+;;      "(") 1 font-lock-doc-face t)
+;;       (,(regexp-opt '("width" "height" "frameRate" "frameCount" "noCursor()" "cursor()")
+;;             t)
+;;        . font-lock-constant-face)
+;;       (,(Concat "screen." (regexp-opt '("width" "height") t))
+;;        1 font-lock-constant-face t)
+;;       ))
+;;   "Subdued level highlighting for Processing mode.")
 
 ;;(defconst processing-font-lock-keywords-2
 ;;  (append processing-font-lock-keywords-1
