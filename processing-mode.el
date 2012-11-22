@@ -160,8 +160,33 @@ on."
     "curvePoint" "curveTangent" "curveTightness" "box" "sphere"
     "sphereDetail" "background" "size" "fill" "noFill" "stroke"
     "noStroke" "colorMode" "ellipseMode" "rectMode" "smooth" "noSmooth"
-    "strokeCap" "strokeJoin" "strokeWeight" "noCursor" "random"
-    "randomSeed" "floor" "ceil"))
+    "strokeCap" "strokeJoin" "strokeWeight" "noCursor" "cursor" "random"
+    "randomSeed" "floor" "ceil" "noLoop" "loop" "createShape" "loadShape"
+    "beginShape" "bezierVertex" "curveVertex" "endShape" "quadraticVertex"
+    "vertex" "shape" "shapeMode" "mouseClicked" "mousePressed" "mouseDragged"
+    "mouseMoved" "mouseReleased" "keyPressed" "keyReleased" "keyTyped"
+    "createInput" "createReader" "loadBytes" "loadStrings" "loadTable"
+    "loadXML" "open" "selectFolder" "selectInput" "day" "hour" "millis"
+    "minute" "month" "second" "year" "print" "println" "save" "saveFrame"
+    "beginRaw" "beginRecord" "createOutput" "createWriter" "endRaw"
+    "endRecord" "PrintWriter" "saveBytes" "saveStream" "saveStrings"
+    "SelectOutput" "applyMatrix" "popMatrix" "printMatrix" "pushMatrix"
+    "resetMatrix" "rotate" "rotateX" "rotateY" "rotateZ" "scale" "shearX"
+    "shearY" "translate" "ambientLight" "directionalLight" "lightFalloff"
+    "lights" "lightSpecular" "noLights" "normal" "pointLight" "spotLight"
+    "beginCamera" "camera" "endCamera" "frustum" "ortho" "perspective"
+    "printCamera" "printProjection" "modelX" "modelY" "modelZ" "screenX"
+    "screenY" "screenZ" "ambient" "emissive" "shininess" "specular" "alpha"
+    "blue" "brightness" "color" "green" "hue" "lerpColor" "red" "saturation"
+    "createImage" "image" "imageMode" "loadImage" "noTint" "requestImage"
+    "tint" "texture" "textureMode" "textureWrap" "blend" "copy" "filter"
+    "get" "loadPixels" "set" "updatePixels" "blendMode" "createGraphics"
+    "hint" "loadShader" "resetShader" "shader" "createFont" "loadFont"
+    "text" "textFont" "textAlign" "textLeading" "textMode" "textSize"
+    "textWidth" "textAscent" "textDescent" "abs" "constrain" "dist" "exp"
+    "lerp" "log" "mag" "map" "max" "min" "norm" "pow" "round" "sq" "sqrt"
+    "acos" "asin" "atan" "atan2" "cos" "degrees" "radians" "sin" "tan"
+    "noise" "noiseDetail" "noiseSeed"))
 
 (defvar processing-constants
   '("CENTER" "RADIUS" "CORNER" "CORNERS" "HALF_PI" "PI" "QUARTER_PI"
@@ -177,89 +202,11 @@ on."
 (defvar processing-builtins-regexp (regexp-opt processing-builtins 'words))
 
 (defconst processing-font-lock-keywords-1
-  (eval-when-compile
-    `(
-      (,processing-functions-regexp . font-lock-doc-face)
-      (,processing-constants-regexp . font-lock-constant-face)
-      (,processing-builtins-regexp . font-lock-builtin-face)
-      )
-    ))
-
-;; (defconst processing-font-lock-keywords-1
-;;   (eval-when-compile
-;;     `( ;; Shape functions
-;;       (,(concat
-;;      (regexp-opt '("triangle" "line" "arc" "point" "quad" "ellipse"
-;;                "rect" "curve" "bezier")
-;;              t)
-;;      "(") 1 font-lock-function-name-face t)
-;;       (,(concat
-;;      (regexp-opt '("strokeWeight" "smooth" "strokeJoin" "noSmooth"
-;;                "ellipseMode" "rectMode" "background" "stroke")
-;;              t)
-;;      "(") 1 font-lock-doc-face t)
-;;       (,(regexp-opt '("width" "height" "frameRate" "frameCount" "noCursor()" "cursor()")
-;;             t)
-;;        . font-lock-constant-face)
-;;       (,(Concat "screen." (regexp-opt '("width" "height") t))
-;;        1 font-lock-constant-face t)
-;;       ))
-;;   "Subdued level highlighting for Processing mode.")
-
-;;(defconst processing-font-lock-keywords-2
-;;  (append processing-font-lock-keywords-1
-;;    (eval-when-compile
-;;      `(
+  `((,processing-functions-regexp . font-lock-doc-face)
+    (,processing-constants-regexp . font-lock-constant-face)
+    (,processing-builtins-regexp . font-lock-builtin-face)))
 
 (defvar processing-font-lock-keywords processing-font-lock-keywords-1
   "Default expressions to highlight in Processing mode.")
-
-;; ;; YASnippets
-;; (if (fboundp 'yas-minor-mode)
-;;     (progn
-;;       (require 'yasnippet)
-;;       (message "processing-mode: defining YASnippets")
-;;       (yas-define-snippets
-;;        'processing-mode
-;;        '(
-;;          ;; (key template name condition)
-;;          ("tri" "triangle(${x1}, ${y1}, ${x2}, ${y2}, ${x3}, ${y3});"
-;;           "triangle" nil)
-;;          ("l(" "line(${x1}, ${y1}, ${x2}, ${y2});" "line 2d" nil)
-;;          ("l(.3d" "line(${x1}, ${y1}, ${z1}, ${x2}, ${y2}, ${z2});" "line 3d" nil)
-;;          ("arc" "arc(${x}, ${y}, ${width}, ${height}, ${start}, ${stop});" "arc" nil)
-;;          ("p(" "point(${x}, ${y});" "point 2d" nil)
-;;          ("p(.3d" "point(${x}, ${y}, ${z});" "point 3d" nil)
-;;          ("quad" "quad(${x1}, ${y1}, ${x2}, ${y2}, ${x3}, ${y3}, ${x4}, ${y4});"
-;;           "quad" nil)
-;;          ("ell" "ellipse(${x}, ${y}, ${width}, ${height});" "ellipse" nil)
-;;          ("rect" "rect(${x}, ${y}, ${width}, ${height});" "rect" nil)
-
-;;          ;; Color Setting
-;;          ("background" "background(${gray_or_color_or_hex});" "background .." nil)
-;;          ("background.ca" "background(${gray_or_color_or_hex}, ${alpha});"
-;;           "background .. alpha" nil)
-;;          ("background.rgb" "background(${red}, ${green}, ${blue});" "background RGB" nil)
-;;          ("background.rgba" "background(${red}, ${green}, ${blue}, ${alpha});"
-;;           "background RGBA" nil)
-;;          ("colorm" "colorMode(${RGB_or_HSV});" "color mode" nil)
-;;          ("colorm.r" "colorMode(${RGB_or_HSV}, ${range});" "color mode range" nil)
-;;          ("colorm.rgb" "colorMode(${RGB_or_HSV}, ${range1}, ${range2}, ${range3});"
-;;           "color mode RGB/HSV range" nil)
-;;          ("colorm.rgba" "colorMode(${RGB_or_HSV}, ${range1}, ${range2}, ${range3}, ${range4});"
-;;           "color mode RGB/HSV, A range" nil)
-;;          ("stroke" "stroke(${gray_or_color_or_hex});" "stroke .." nil)
-;;          ("stroke.ca" "stroke(${gray_or_color_or_hex}, ${alpha});" "stroke .. alpha" nil)
-;;          ("stroke.rgb" "stroke(${red}, ${green}, ${blue});" "stroke RGB" nil)
-;;          ("stroke.rgba" "stroke(${red}, ${green}, ${blue}, ${alpha});" "stroke RGBA" nil)
-;;          ("fill" "fill(${gray_or_color_or_hex});" "fill .." nil)
-;;          ("fill.ca" "fill(${gray_or_color_or_hex}, ${alpha});" "fill .. alpha" nil)
-;;          ("fill.rgb" "fill(${red}, ${green}, ${blue});" "fill RGB" nil)
-;;          ("fill.rgba" "fill(${red}, ${green}, ${blue}, ${alpha});" "fill RGBA" nil)
-;;          ))
-;;       t)
-;;   (progn
-;;     (message "processing-mode: YASnippets not installed. Not defining any snippets.")
-;;     nil))
 
 (provide 'processing-mode)
