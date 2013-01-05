@@ -80,20 +80,20 @@ must be set to one of \"windows\", \"macosx\", or \"linux\". If
 no platform is selected, the default platform that Emacs is
 running on will be selected."
   (concat processing-location
-      " --force --sketch=\"" (expand-file-name sketch-dir)
-      ;; "\" --output=\"" (expand-file-name output-dir)
-      ;; Remove this comment when Processing implements the --preferences=??? command-line option.
-      ;;"\" --preferences=\"" (expand-file-name "~/.processing/preferences.txt")
-      "\" --" cmd
-      (if (string= cmd "export")
-          (concat " --platform="
-                  (if platform platform processing-platform)
-                  " --bits="
-                  (if bits bits processing-platform-bits)
-                  " --output=\"" (expand-file-name
-                                  (concat "application."
-                                          (if platform platform processing-platform))) "\"")
-        (concat " --output=\"" (expand-file-name output-dir) "\""))))
+          " --force --sketch=\"" (expand-file-name sketch-dir)
+          ;; "\" --output=\"" (expand-file-name output-dir)
+          ;; Remove this comment when Processing implements the --preferences=??? command-line option.
+          ;;"\" --preferences=\"" (expand-file-name "~/.processing/preferences.txt")
+          "\" --" cmd
+          (if (string= cmd "export")
+              (concat " --platform="
+                      (if platform platform processing-platform)
+                      " --bits="
+                      (if bits bits processing-platform-bits)
+                      " --output=\"" (expand-file-name
+                                      (concat "application."
+                                              (if platform platform processing-platform))) "\"")
+            (concat " --output=\"" (expand-file-name output-dir) "\""))))
 
 (defun processing-commander (sketch-dir output-dir cmd &optional platform bits)
   "Runs the Processing compiler, using a compile-command
@@ -131,13 +131,13 @@ on."
 
 ;; Add hook so that when processing-mode is loaded, the local variable
 ;; 'compile-command is set.
-(add-hook 'processing-mode-hook
-      (lambda ()
-        (let ((sketch-dir (file-name-directory buffer-file-name)))
-          (set (make-local-variable 'compile-command)
-           (processing-make-compile-command sketch-dir
-                            (concat sketch-dir "output")
-                            "build")))))
+;; (add-hook 'processing-mode-hook
+;;       (lambda ()
+;;         (let ((sketch-dir (file-name-directory buffer-file-name)))
+;;           (set (make-local-variable 'compile-command)
+;;                (processing-make-compile-command sketch-dir
+;;                                                 (concat sketch-dir "output")
+;;                                                 "build")))))
 
 ;; Key bindings
 (define-key processing-mode-map "\C-c\C-r" 'processing-sketch-compile)
