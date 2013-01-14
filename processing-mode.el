@@ -147,11 +147,12 @@ on."
 
 ;; Regular expressions
 ;; Compilation
-(pushnew
- ;; Mode name, REGEXP FILE LINE COLUMN TYPE HYPERLINK HIGHLIGHT
- '(processing "^\\([[:alnum:]]+.pde\\):\\([0-9]+\\):\\([0-9]+\\):.*$"
-          1 2 3)
- compilation-error-regexp-alist-alist)
+(eval-after-load "compile"
+  '(add-hook 'processing-mode-hook
+             (lambda ()
+               (add-to-list
+                'compilation-error-regexp-alist
+                '("^\\([[:alnum:]]+.pde\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3)))))
 
 ;; Font-lock, keywords
 (defvar processing-functions
