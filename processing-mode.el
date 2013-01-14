@@ -29,16 +29,6 @@
   (require 'compile)
   (require 'cl))
 
-(define-derived-mode processing-mode
-  java-mode "Processing"
-  "Major mode for Processing.
-\\{java-mode-map}"
-  (set (make-local-variable 'c-basic-offset) 2)
-  (set (make-local-variable 'tab-width) 2)
-
-  (font-lock-add-keywords 'processing-mode processing-font-lock-keywords)
-  )
-
 (defvar processing-location nil
   "The path to the processing-java command line tool,
 e.g. /usr/bin/processing-java.")
@@ -139,12 +129,6 @@ on."
 ;;                                                 (concat sketch-dir "output")
 ;;                                                 "build")))))
 
-;; Key bindings
-(define-key processing-mode-map "\C-c\C-r" 'processing-sketch-compile)
-(define-key processing-mode-map "\C-c\C-p" 'processing-sketch-present)
-(define-key processing-mode-map "\C-c\C-b" 'processing-sketch-build)
-(define-key processing-mode-map "\C-c\C-e" 'processing-export-application)
-
 ;; Regular expressions
 ;; Compilation
 (eval-after-load "compile"
@@ -233,5 +217,25 @@ on."
 
 (defvar processing-font-lock-keywords processing-font-lock-keywords-1
   "Default expressions to highlight in Processing mode.")
+
+(defvar processing-mode-map
+  (let ((processing-mode-map (make-keymap)))
+    (define-key processing-mode-map "\C-c\C-r" 'processing-sketch-compile)
+    (define-key processing-mode-map "\C-c\C-p" 'processing-sketch-present)
+    (define-key processing-mode-map "\C-c\C-b" 'processing-sketch-build)
+    (define-key processing-mode-map "\C-c\C-e" 'processing-export-application)
+    processing-mode-map)
+  "Keymap for processing major mode.")
+
+(define-derived-mode processing-mode
+  java-mode "Processing"
+  "Major mode for Processing.
+\\{java-mode-map}"
+  (set (make-local-variable 'c-basic-offset) 2)
+  (set (make-local-variable 'tab-width) 2)
+
+  (font-lock-add-keywords 'processing-mode processing-font-lock-keywords)
+  )
+
 
 (provide 'processing-mode)
