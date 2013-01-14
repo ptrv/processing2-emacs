@@ -227,7 +227,7 @@ on."
 (defvar processing-builtins-regexp (regexp-opt processing-builtins 'words))
 
 (defconst processing-font-lock-keywords-1
-  `((,processing-functions-regexp . font-lock-doc-face)
+  `((,processing-functions-regexp . font-lock-keyword-face)
     (,processing-constants-regexp . font-lock-constant-face)
     (,processing-builtins-regexp . font-lock-builtin-face)))
 
