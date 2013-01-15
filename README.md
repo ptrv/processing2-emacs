@@ -23,7 +23,7 @@ To add the snippets put this also in your .emacs file:
 
 and eventually add this to activate yasnippet if it is not:
 
-    (add-hook processing-mode-hook 'yas-minor-mode)
+    (add-hook 'processing-mode-hook 'yas-minor-mode)
 
 
 ## Usage
