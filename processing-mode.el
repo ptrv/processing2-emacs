@@ -1,4 +1,4 @@
-;; processing-mode.el
+;;; processing-mode.el --- Major mode for Processing 2.0
 
 ;; Processing.org language based on Java mode. Adds keyword
 ;; highlighting for all recognized Processing language functions.
@@ -25,13 +25,39 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;;; Commentary:
+
+;; In your .emacs file, add this:
+;;
+;;    (add-to-list 'load-path "/path/to/processing2-emacs/")
+;;    (autoload 'processing-mode "processing-mode" "Processing mode" t)
+;;    (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
+;;
+;; To add the snippets put this also in your .emacs file:
+;;
+;;     (yas-load-directory  "/path/to/processing2-emacs/snippets")
+;;
+;; and eventually add this to activate yasnippet if it is not:
+;;
+;;     (add-hook 'processing-mode-hook 'yas-minor-mode)
+;;
+;; Usage:
+;;
+;; The key-bindings are:
+;;
+;;     C-c C-r    Run a sketch.
+;;     C-c C-b    Compile a sketch into .class files.
+;;     C-c C-p    Run a sketch full screen.
+;;     C-c C-e    Export sketch.
+
+;;; Code:
 (eval-when-compile
   (require 'compile)
   (require 'cl))
 
 (defvar processing-location nil
-  "The path to the processing-java command line tool,
-e.g. /usr/bin/processing-java.")
+  "The path to the processing-java command line tool.
+The path should be something like /usr/bin/processing-java.")
 
 (defconst processing-platform
   (cond ((string= system-type "gnu/linux")
@@ -41,7 +67,7 @@ e.g. /usr/bin/processing-java.")
     ((or (string= system-type "ms-dos") (string= system-type "windows-nt")
          (string= system-type "cygwin"))
      "windows"))
-  "The platform that Processing is running on. It can be `linux', `macosx' or `windows'.")
+  "The platform that Processing is running on.  It can be `linux', `macosx' or `windows'.")
 
 (defconst processing-platform-bits
   (if (string-match "64" system-configuration)
@@ -51,10 +77,11 @@ e.g. /usr/bin/processing-java.")
 ;; Functions
 
 (defun processing-make-compile-command (sketch-dir output-dir cmd &optional platform bits)
-  "Returns a string which is the compile-command for Processing
-sketches, targetting the sketch files found in ``sketch-dir'',
-with the output being stored in ``output-dir''. The command flag
-that is executed on the sketch depends on the type of ``cmd''.
+  "Return a string which is the `compile-command' for Processing.
+sketches, targetting the sketch files found in SKETCH-DIR,
+with the output being stored in OUTPUT-DIR.  The command flag
+that is executed on the sketch depends on the type of CMD.
+Optional arguments are PLATFORM and BITS.
 
 Valid types of commands are:
 
@@ -86,9 +113,10 @@ running on will be selected."
             (concat " --output=\"" (expand-file-name output-dir) "\""))))
 
 (defun processing-commander (sketch-dir output-dir cmd &optional platform bits)
-  "Runs the Processing compiler, using a compile-command
-constructed using the ``processing-make-compile-command''
-function."
+  "Run the Processing compiler, using a `compile-command'.
+It is constructed using the ``processing-make-compile-command''
+function.  Arguments are SKETCH-DIR, OUTPUT-DIR and CMD.
+Optional arguments PLATFORM and BITS."
   (let ((compilation-error-regexp-alist '(processing)))
     (compile (processing-make-compile-command sketch-dir output-dir cmd platform bits))))
 
@@ -106,15 +134,15 @@ which will be found in the parent directory of the buffer file."
   (processing-sketch-compile "present"))
 
 (defun processing-sketch-build ()
-  "Runs the build command for a Processing sketch. Processing
-will process the sketch into .java files and then compile them
+  "Run the build command for a Processing sketch.
+Processing will process the sketch into .java files and then compile them
 into .class files."
   (interactive)
   (processing-sketch-compile "build"))
 
 (defun processing-export-application ()
-  "Turns the Processing sketch into a Java application. Assumes
-that the platform target is whatever platform Emacs is running
+  "Turn the Processing sketch into a Java application.
+Assumes that the platform target is whatever platform Emacs is running
 on."
   (interactive)
   (processing-sketch-compile "export"))
@@ -237,5 +265,5 @@ on."
   (font-lock-add-keywords 'processing-mode processing-font-lock-keywords)
   )
 
-
 (provide 'processing-mode)
+;;; processing-mode.el ends here
