@@ -120,16 +120,22 @@ Optional arguments PLATFORM and BITS."
   (let ((compilation-error-regexp-alist '(processing)))
     (compile (processing-make-compile-command sketch-dir output-dir cmd platform bits))))
 
-(defun processing-sketch-compile (&optional cmd)
-  "Runs the Processing Commander application with the current
-buffer. The output directory is the sub-directory ``output''
-which will be found in the parent directory of the buffer file."
-  (interactive)
+(defun processing-sketch-compile (cmd)
+  "Run the Processing Commander application with the current buffer.
+The output directory is the sub-directory ``output''
+which will be found in the parent directory of the buffer file.
+CMD is the run type command argument."
   ;; TODO: Add support for temporary sketches
   (let ((sketch-dir (file-name-directory buffer-file-name)))
-    (processing-commander sketch-dir (concat sketch-dir "output") (if cmd cmd "run"))))
+    (processing-commander sketch-dir (concat sketch-dir "output") cmd)))
 
+(defun processing-sketch-run ()
+  "Run sketch."
+  (interactive)
+  (processing-sketch-compile "run")
+  )
 (defun processing-sketch-present ()
+  "Run sketch fullscreen."
   (interactive)
   (processing-sketch-compile "present"))
 
@@ -247,8 +253,8 @@ on."
   "Default expressions to highlight in Processing mode.")
 
 (defvar processing-mode-map
-  (let ((processing-mode-map (make-keymap)))
-    (define-key processing-mode-map "\C-c\C-r" 'processing-sketch-compile)
+  (let ((processing-mode-map (make-sparse-keymap)))
+    (define-key processing-mode-map "\C-c\C-r" 'processing-sketch-run)
     (define-key processing-mode-map "\C-c\C-p" 'processing-sketch-present)
     (define-key processing-mode-map "\C-c\C-b" 'processing-sketch-build)
     (define-key processing-mode-map "\C-c\C-e" 'processing-export-application)
