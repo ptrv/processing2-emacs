@@ -55,9 +55,10 @@
   (require 'compile)
   (require 'cl))
 
-(defvar processing-location nil
+(defcustom processing-location nil
   "The path to the processing-java command line tool.
-The path should be something like /usr/bin/processing-java.")
+The path should be something like /usr/bin/processing-java."
+  :type 'string)
 
 (defconst processing-platform
   (cond ((string= system-type "gnu/linux")
