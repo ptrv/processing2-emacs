@@ -164,6 +164,16 @@ on."
 ;;                                                 (concat sketch-dir "output")
 ;;                                                 "build")))))
 
+(defun processing-create-sketch (name)
+  "Create a new sketch under current directory."
+  (interactive "sInsert a name: ")
+  (let ((name (remove ?\s name)))
+    (if (not (string-equal "" name))
+        (progn
+          (make-directory name)
+          (find-file (concat name "/" name ".pde")))
+      (error "Please insert a sketch name."))))
+
 ;; Regular expressions
 ;; Compilation
 (eval-after-load "compile"
