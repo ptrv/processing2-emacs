@@ -55,9 +55,10 @@
   (require 'compile)
   (require 'cl))
 
-(defvar processing-location nil
+(defcustom processing-location nil
   "The path to the processing-java command line tool.
-The path should be something like /usr/bin/processing-java.")
+The path should be something like /usr/bin/processing-java."
+  :type 'string)
 
 (defconst processing-platform
   (cond ((string= system-type "gnu/linux")
@@ -162,6 +163,16 @@ on."
 ;;                (processing-make-compile-command sketch-dir
 ;;                                                 (concat sketch-dir "output")
 ;;                                                 "build")))))
+
+(defun processing-create-sketch (name)
+  "Create a new sketch under current directory."
+  (interactive "sInsert a name: ")
+  (let ((name (remove ?\s name)))
+    (if (not (string-equal "" name))
+        (progn
+          (make-directory name)
+          (find-file (concat name "/" name ".pde")))
+      (error "Please insert a sketch name."))))
 
 ;; Regular expressions
 ;; Compilation
