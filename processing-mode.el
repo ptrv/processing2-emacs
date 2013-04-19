@@ -12,6 +12,13 @@
 
 ;; Modified by Peter Vasil <mail@petervasil.net>, November 2012
 
+;; Author: Rudolf Olah <omouse@gmail.com>,
+;;         Bunny Blake <discolingua@gmail.com>,
+;;         Peter Vasil <mail@petervasil.net>,
+;; Keywords: languages, snippets
+;; Version: 1.0.0
+;; Package-Requires: ((yasnippet "0.8.0"))
+;;
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation, either version 3 of the License, or
@@ -27,33 +34,23 @@
 
 ;;; Commentary:
 
-;; In your .emacs file, add this:
-;;
-;;    (add-to-list 'load-path "/path/to/processing2-emacs/")
-;;    (autoload 'processing-mode "processing-mode" "Processing mode" t)
-;;    (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
-;;
-;; To add the snippets put this also in your .emacs file:
-;;
-;;     (yas-load-directory  "/path/to/processing2-emacs/snippets")
-;;
-;; and eventually add this to activate yasnippet if it is not:
-;;
-;;     (add-hook 'processing-mode-hook 'yas-minor-mode)
-;;
+;; Major mode for the Processing version >= 2.0.
+
 ;; Usage:
-;;
+
 ;; The key-bindings are:
-;;
+
 ;;     C-c C-r    Run a sketch.
 ;;     C-c C-b    Compile a sketch into .class files.
 ;;     C-c C-p    Run a sketch full screen.
 ;;     C-c C-e    Export sketch.
 
 ;;; Code:
+
 (eval-when-compile
   (require 'compile)
-  (require 'cl))
+  (require 'cl)
+  (require 'yasnippet))
 
 (defgroup processing nil
   "Major mode for the Processing language."
@@ -278,6 +275,7 @@ on."
     processing-mode-map)
   "Keymap for processing major mode.")
 
+;;;###autoload
 (define-derived-mode processing-mode
   java-mode "Processing"
   "Major mode for Processing.
@@ -286,10 +284,26 @@ on."
   (set (make-local-variable 'tab-width) 2)
 
   (font-lock-add-keywords 'processing-mode processing-font-lock-keywords)
+
   (unless processing-location
       (warn (concat "The variable `processing-location' is unset.
   Please define the location of the processing command-line
-  executable."))) )
+  executable."))))
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
+
+(setq processing-snippets-dir (file-name-directory (or (buffer-file-name)
+                                                       load-file-name)))
+;;;###autoload
+(defun processing-snippets-initialize ()
+  (let ((snip-dir (expand-file-name "snippets" processing-snippets-dir)))
+    (add-to-list 'yas-snippet-dirs snip-dir t)
+    (yas-load-directory snip-dir t)))
+
+;;;###autoload
+(eval-after-load 'yasnippet
+  '(processing-snippets-initialize))
 
 (provide 'processing-mode)
 ;;; processing-mode.el ends here

@@ -8,8 +8,19 @@ https://gist.github.com/4083326
 
 The snippets are taken from Sublime Text 2's Processing plugin and converted to yasnippet snippets.
 
+## Installation
 
-## Setup
+The easies way to install processing2 mode is via MELPA
+
+Install the ELPA package from MELPA or Marmalade with `M-x
+package-install RET processing-mode`. All dependencies are automatically
+installed.
+
+## Maual installation
+
+To install `processing-mode` manually, clone the repository:
+
+    git clone https://github.com/ptrv/processing2-emacs
 
 In your .emacs file, add this:
 
@@ -17,13 +28,10 @@ In your .emacs file, add this:
     (autoload 'processing-mode "processing-mode" "Processing mode" t)
     (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
 
-To add the snippets put this also in your .emacs file:
+Add the following to set up processing snippets for yasnippet:
 
-    (yas-load-directory  "/path/to/processing2-emacs/snippets")
-
-and eventually add this to activate yasnippet if it is not:
-
-    (add-hook 'processing-mode-hook 'yas-minor-mode)
+    (autoload 'processing-snippets-initialize "processing-mode" nil nil nil)
+    (eval-after-load 'yasnippet '(processing-snippets-initialize))
 
 
 ## Usage
