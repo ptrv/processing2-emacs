@@ -10,9 +10,7 @@ The snippets are taken from Sublime Text 2's Processing plugin and converted to 
 
 ## Installation
 
-The easies way to install processing2 mode is via MELPA
-
-Install the ELPA package from MELPA or Marmalade with `M-x
+The easies way is to install the ELPA package from MELPA with `M-x
 package-install RET processing-mode`. All dependencies are automatically
 installed.
 
