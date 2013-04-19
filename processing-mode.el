@@ -286,7 +286,10 @@ on."
   (set (make-local-variable 'tab-width) 2)
 
   (font-lock-add-keywords 'processing-mode processing-font-lock-keywords)
-  )
+  (unless processing-location
+      (warn (concat "The variable `processing-location' is unset.
+  Please define the location of the processing command-line
+  executable."))) )
 
 (provide 'processing-mode)
 ;;; processing-mode.el ends here
