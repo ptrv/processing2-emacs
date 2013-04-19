@@ -55,10 +55,16 @@
   (require 'compile)
   (require 'cl))
 
+(defgroup processing nil
+  "Major mode for the Processing language."
+  :group 'languages
+  :prefix "processing-")
+
 (defcustom processing-location nil
   "The path to the processing-java command line tool.
 The path should be something like /usr/bin/processing-java."
-  :type 'string)
+  :type 'string
+  :group 'processing)
 
 (defconst processing-platform
   (cond ((string= system-type "gnu/linux")
