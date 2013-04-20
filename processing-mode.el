@@ -273,6 +273,24 @@ running on."
     processing-mode-map)
   "Keymap for processing major mode.")
 
+(easy-menu-define processing-mode-menu processing-mode-map
+  "Menu used when Processing major mode is active."
+  '("Processing"
+    ["Run" processing-sketch-run
+     :help "Run processing sketch"]
+    ["Run fullscreen" processing-sketch-present
+     :help "Run processing sketch fullscreen"]
+    ["Build" processing-sketch-build
+     :help "Build processing sketch"]
+    ["Export" processing-export-application
+     :help "Export processing sketch to application"]
+    "---"
+    ["New sketch" processing-create-sketch
+     :help "Create a new sketch in the current directory"]
+    "---"
+    ["Settings" (customize-group 'processing)
+     :help "Processing settings"]))
+
 ;;;###autoload
 (define-derived-mode processing-mode
   java-mode "Processing"
@@ -282,6 +300,8 @@ running on."
   (set (make-local-variable 'tab-width) 2)
 
   (font-lock-add-keywords 'processing-mode processing-font-lock-keywords)
+
+  (easy-menu-add processing-mode-menu)
 
   (unless processing-location
       (warn (concat "The variable `processing-location' is unset.
