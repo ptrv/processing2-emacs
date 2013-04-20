@@ -27,11 +27,28 @@ In your .emacs file, add this:
     (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
     (setq processing-location "/path/to/processing-java")
 
-Add the following to set up processing snippets for yasnippet:
+Add the following to set up processing snippets for [yasnippet][1]:
 
     (autoload 'processing-snippets-initialize "processing-mode" nil nil nil)
     (eval-after-load 'yasnippet '(processing-snippets-initialize))
 
+Optionally it is also possible to set up basic [Audo-Complete][2]
+support to have keyword completion.
+
+    (defun processing-mode-init ()
+      (make-local-variable 'ac-sources)
+      (setq ac-sources '(ac-source-dictionary ac-source-yasnippet))
+      (make-local-variable 'ac-user-dictionary)
+      (setq ac-user-dictionary processing-functions)
+      (setq ac-user-dictionary (append ac-user-dictionary processing-builtins))
+      (setq ac-user-dictionary (append ac-user-dictionary processing-constants)))
+
+    (add-to-list 'ac-modes 'processing-mode)
+    (add-hook 'processing-mode-hook 'processing-mode-init)
+
+
+[1]: https://github.com/capitaomorte/yasnippet
+[2]: http://cx4a.org/software/auto-complete/
 
 ## Usage
 
