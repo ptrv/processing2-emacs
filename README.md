@@ -10,7 +10,7 @@ The snippets are taken from Sublime Text 2's Processing plugin and converted to 
 
 ## Installation
 
-The easies way is to install the ELPA package from MELPA with `M-x
+The easiest way is to install the ELPA package from MELPA with `M-x
 package-install RET processing-mode`. All dependencies are automatically
 installed.
 
@@ -25,6 +25,7 @@ In your .emacs file, add this:
     (add-to-list 'load-path "/path/to/processing2-emacs/")
     (autoload 'processing-mode "processing-mode" "Processing mode" t)
     (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
+    (setq processing-location "/path/to/processing-java")
 
 Add the following to set up processing snippets for yasnippet:
 

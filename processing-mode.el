@@ -34,7 +34,7 @@
 
 ;;; Commentary:
 
-;; Major mode for the Processing version >= 2.0.
+;; Major mode for Processing 2.0.
 
 ;; Usage:
 
@@ -65,27 +65,25 @@ The path should be something like /usr/bin/processing-java."
 
 (defconst processing-platform
   (cond ((string= system-type "gnu/linux")
-     "linux")
-    ((or (string= system-type "darwin") (string= system-type "macos"))
-     "macosx")
-    ((or (string= system-type "ms-dos") (string= system-type "windows-nt")
-         (string= system-type "cygwin"))
-     "windows"))
+         "linux")
+        ((or (string= system-type "darwin") (string= system-type "macos"))
+         "macosx")
+        ((or (string= system-type "ms-dos") (string= system-type "windows-nt")
+             (string= system-type "cygwin"))
+         "windows"))
   "The platform that Processing is running on.  It can be `linux', `macosx' or `windows'.")
 
 (defconst processing-platform-bits
-  (if (string-match "64" system-configuration)
-      "64"
-    "32"))
+  (if (string-match "64" system-configuration) "64" "32"))
 
 ;; Functions
 
 (defun processing-make-compile-command (sketch-dir output-dir cmd &optional platform bits)
   "Return a string which is the `compile-command' for Processing.
-sketches, targetting the sketch files found in SKETCH-DIR,
-with the output being stored in OUTPUT-DIR.  The command flag
-that is executed on the sketch depends on the type of CMD.
-Optional arguments are PLATFORM and BITS.
+sketches, targetting the sketch files found in SKETCH-DIR, with
+the output being stored in OUTPUT-DIR. The command flag that is
+executed on the sketch depends on the type of CMD. Optional
+arguments are PLATFORM and BITS.
 
 Valid types of commands are:
 
@@ -119,16 +117,16 @@ running on will be selected."
 (defun processing-commander (sketch-dir output-dir cmd &optional platform bits)
   "Run the Processing compiler, using a `compile-command'.
 It is constructed using the ``processing-make-compile-command''
-function.  Arguments are SKETCH-DIR, OUTPUT-DIR and CMD.
-Optional arguments PLATFORM and BITS."
+function. Arguments are SKETCH-DIR, OUTPUT-DIR and CMD. Optional
+arguments PLATFORM and BITS."
   (let ((compilation-error-regexp-alist '(processing)))
     (compile (processing-make-compile-command sketch-dir output-dir cmd platform bits))))
 
 (defun processing-sketch-compile (cmd)
   "Run the Processing Commander application with the current buffer.
-The output directory is the sub-directory ``output''
-which will be found in the parent directory of the buffer file.
-CMD is the run type command argument."
+The output directory is the sub-directory ``output'' which will
+be found in the parent directory of the buffer file. CMD is the
+run type command argument."
   ;; TODO: Add support for temporary sketches
   (let ((sketch-dir (file-name-directory buffer-file-name)))
     (processing-commander sketch-dir (concat sketch-dir "output") cmd)))
@@ -145,15 +143,15 @@ CMD is the run type command argument."
 
 (defun processing-sketch-build ()
   "Run the build command for a Processing sketch.
-Processing will process the sketch into .java files and then compile them
-into .class files."
+Processing will process the sketch into .java files and then
+compile them into .class files."
   (interactive)
   (processing-sketch-compile "build"))
 
 (defun processing-export-application ()
   "Turn the Processing sketch into a Java application.
-Assumes that the platform target is whatever platform Emacs is running
-on."
+Assumes that the platform target is whatever platform Emacs is
+running on."
   (interactive)
   (processing-sketch-compile "export"))
 
@@ -168,14 +166,14 @@ on."
 ;;                                                 "build")))))
 
 (defun processing-create-sketch (name)
-  "Create a new sketch under current directory."
+  "Create a new sketch with NAME under current directory."
   (interactive "sInsert a name: ")
   (let ((name (remove ?\s name)))
     (if (not (string-equal "" name))
         (progn
           (make-directory name)
           (find-file (concat name "/" name ".pde")))
-      (error "Please insert a sketch name."))))
+      (error "Please insert a sketch name"))))
 
 ;; Regular expressions
 ;; Compilation
