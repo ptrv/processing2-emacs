@@ -50,7 +50,8 @@
 (eval-when-compile
   (require 'compile)
   (require 'cl)
-  (require 'yasnippet))
+  (require 'yasnippet)
+  (require 'easymenu))
 
 (defgroup processing nil
   "Major mode for the Processing language."
@@ -300,8 +301,6 @@ running on."
   (set (make-local-variable 'tab-width) 2)
 
   (font-lock-add-keywords 'processing-mode processing-font-lock-keywords)
-
-  (easy-menu-add processing-mode-menu)
 
   (unless processing-location
       (warn (concat "The variable `processing-location' is unset.
