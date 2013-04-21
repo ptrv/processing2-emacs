@@ -44,6 +44,7 @@
 ;;     C-c C-b    Compile a sketch into .class files.
 ;;     C-c C-p    Run a sketch full screen.
 ;;     C-c C-e    Export sketch.
+;;     C-c C-d    Find in reference.
 
 ;;; Code:
 
@@ -51,7 +52,8 @@
   (require 'compile)
   (require 'cl)
   (require 'yasnippet)
-  (require 'easymenu))
+  (require 'easymenu)
+  (require 'thingatpt))
 
 (defgroup processing nil
   "Major mode for the Processing language."
@@ -61,6 +63,11 @@
 (defcustom processing-location nil
   "The path to the processing-java command line tool.
 The path should be something like /usr/bin/processing-java."
+  :type 'string
+  :group 'processing)
+
+(defcustom processing-application-dir nil
+  "The path of the processing application directory."
   :type 'string
   :group 'processing)
 
@@ -120,8 +127,12 @@ running on will be selected."
 It is constructed using the ``processing-make-compile-command''
 function. Arguments are SKETCH-DIR, OUTPUT-DIR and CMD. Optional
 arguments PLATFORM and BITS."
-  (let ((compilation-error-regexp-alist '(processing)))
-    (compile (processing-make-compile-command sketch-dir output-dir cmd platform bits))))
+  (if (and processing-location (file-exists-p processing-location))
+      (let ((compilation-error-regexp-alist '(processing)))
+        (compile (processing-make-compile-command sketch-dir output-dir cmd platform bits)))
+    (message (concat "The variable `processing-location' is either unset "
+                     "or the path is invalid. Please define the location "
+                     "of the processing command-line executable."))))
 
 (defun processing-sketch-compile (cmd)
   "Run the Processing Commander application with the current buffer.
@@ -175,6 +186,46 @@ running on."
           (make-directory name)
           (find-file (concat name "/" name ".pde")))
       (error "Please insert a sketch name"))))
+
+(defun processing--open-query-in-reference (query)
+  "Open QUERY in Processing reference."
+  (let (help-file-fn help-file-keyword)
+    (if (and processing-application-dir
+             (file-exists-p processing-application-dir))
+        (progn
+          (setq help-file-fn (concat (file-name-as-directory processing-application-dir)
+                                     "modes/java/reference/" query ".html"))
+          (setq help-file-keyword (concat (file-name-as-directory processing-application-dir)
+                                          "modes/java/reference/" query "_.html"))
+          (cond ((file-exists-p help-file-fn) (browse-url help-file-fn))
+                ((file-exists-p help-file-keyword) (browse-url help-file-keyword))
+                (t (message "No help file for %s" query))))
+      (message (concat "The variable `processing-application-dir' is either unset"
+                       " or the directory does not exist.")))))
+
+(defun processing-search-in-reference (query)
+  "Search QUERY in Processing reference.
+When calle interactively, prompt the user for QUERY."
+  (interactive "sFind reference for: ")
+  ;; trim query before open reference
+  (processing--open-query-in-reference (replace-regexp-in-string
+                                        "\\`[ \t\n()]*" ""
+                                        (replace-regexp-in-string
+                                         "[ \t\n()]*\\'" "" query))))
+
+(defun processing-find-in-reference ()
+  "Find word under cursor in Processing reference."
+  (interactive)
+  (processing--open-query-in-reference (thing-at-point 'word)))
+
+(defun processing-open-reference ()
+  "Open Processing reference."
+  (interactive)
+  (if (file-exists-p processing-application-dir)
+      (browse-url (concat (file-name-as-directory processing-application-dir)
+                          "modes/java/reference/index.html"))
+    (message (concat "The variable `processing-application-dir' is either"
+                     "unset or the directory does not exist."))))
 
 ;; Regular expressions
 ;; Compilation
@@ -271,6 +322,7 @@ running on."
     (define-key processing-mode-map "\C-c\C-p" 'processing-sketch-present)
     (define-key processing-mode-map "\C-c\C-b" 'processing-sketch-build)
     (define-key processing-mode-map "\C-c\C-e" 'processing-export-application)
+    (define-key processing-mode-map "\C-c\C-d" 'processing-find-in-reference)
     processing-mode-map)
   "Keymap for processing major mode.")
 
@@ -289,6 +341,11 @@ running on."
     ["New sketch" processing-create-sketch
      :help "Create a new sketch in the current directory"]
     "---"
+    ["Reference" processing-open-reference
+     :help "Open Processing reference"]
+    ["Find in reference" processing-find-in-reference
+     :help "Find word under cursor in reference"]
+    "---"
     ["Settings" (customize-group 'processing)
      :help "Processing settings"]))
 
@@ -300,12 +357,7 @@ running on."
   (set (make-local-variable 'c-basic-offset) 2)
   (set (make-local-variable 'tab-width) 2)
 
-  (font-lock-add-keywords 'processing-mode processing-font-lock-keywords)
-
-  (unless processing-location
-      (warn (concat "The variable `processing-location' is unset.
-  Please define the location of the processing command-line
-  executable."))))
+  (font-lock-add-keywords 'processing-mode processing-font-lock-keywords))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
@@ -315,8 +367,11 @@ running on."
 ;;;###autoload
 (defun processing-snippets-initialize ()
   (let ((snip-dir (expand-file-name "snippets" processing-snippets-dir)))
-    (add-to-list 'yas-snippet-dirs snip-dir t)
-    (yas-load-directory snip-dir t)))
+    (if (file-exists-p snip-dir)
+        (progn
+          (add-to-list 'yas-snippet-dirs snip-dir t)
+          (yas-load-directory snip-dir t))
+      (message "Error: Porcessing snippets dir %s is invalid!" snip-dir))))
 
 ;;;###autoload
 (eval-after-load 'yasnippet
