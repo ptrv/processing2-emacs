@@ -45,6 +45,7 @@
 ;;     C-c C-p    Run a sketch full screen.
 ;;     C-c C-e    Export sketch.
 ;;     C-c C-d    Find in reference.
+;;     C-c C-f    Find or create sketch.
 
 ;;; Code:
 
@@ -182,15 +183,27 @@ running on."
 ;;                                                 (concat sketch-dir "output")
 ;;                                                 "build")))))
 
-(defun processing-create-sketch (name)
-  "Create a new sketch with NAME under current directory."
-  (interactive "sInsert a name: ")
+;;;###autoload
+(defun processing-find-sketch (name &optional arg)
+  "Find a processing sketch with NAME in `processing-sketch-dir'.
+If ARG is non nil or `processing-sketch-dir' is nil create new
+sketch in current directory."
+  (interactive "sSketch name: \nP")
   (let ((name (remove ?\s name)))
     (if (not (string-equal "" name))
         (progn
-          (make-directory name)
-          (find-file (concat name "/" name ".pde")))
-      (error "Please insert a sketch name"))))
+          (let ((sketch-dir name)
+                (sketch-name name))
+            (if (and processing-sketch-dir
+                     (not arg))
+                (setq sketch-dir (concat
+                                  (file-name-as-directory processing-sketch-dir)
+                                  sketch-dir)))
+            (make-directory sketch-dir t)
+            (find-file (concat sketch-dir "/" sketch-name ".pde"))))
+      (error "Please provide a sketch name"))))
+
+(defalias 'processing-create-sketch 'processing-find-sketch)
 
 (defun processing--open-query-in-reference (query)
   "Open QUERY in Processing reference."
@@ -328,6 +341,7 @@ When calle interactively, prompt the user for QUERY."
     (define-key processing-mode-map "\C-c\C-b" 'processing-sketch-build)
     (define-key processing-mode-map "\C-c\C-e" 'processing-export-application)
     (define-key processing-mode-map "\C-c\C-d" 'processing-find-in-reference)
+    (define-key processing-mode-map "\C-c\C-f" 'processing-find-sketch)
     processing-mode-map)
   "Keymap for processing major mode.")
 
