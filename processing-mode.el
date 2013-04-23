@@ -71,6 +71,11 @@ The path should be something like /usr/bin/processing-java."
   :type 'string
   :group 'processing)
 
+(defcustom processing-sketch-dir nil
+  "The path of the processing sketch directory."
+  :type 'string
+  :group 'processing)
+
 (defconst processing-platform
   (cond ((string= system-type "gnu/linux")
          "linux")

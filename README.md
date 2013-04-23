@@ -26,7 +26,8 @@ In your .emacs file, add this:
     (autoload 'processing-mode "processing-mode" "Processing mode" t)
     (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
     (setq processing-location "/path/to/processing-java")
-    (setq processing-application-dir "/path/to/processing/dir")
+    (setq processing-application-dir "/path/to/processing-application-dir")
+    (setq processing-sketch-dir "/path/to/processing-sketch-dir")
 
 Add the following to set up processing snippets for [yasnippet][1]:
 
