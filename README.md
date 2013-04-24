@@ -14,7 +14,7 @@ The easiest way is to install the ELPA package from MELPA with `M-x
 package-install RET processing-mode`. All dependencies are automatically
 installed.
 
-## Maual installation
+## Manual installation
 
 To install `processing-mode` manually, clone the repository:
 
