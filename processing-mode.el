@@ -40,12 +40,13 @@
 
 ;; The key-bindings are:
 
-;;     C-c C-r    Run a sketch.
-;;     C-c C-b    Compile a sketch into .class files.
-;;     C-c C-p    Run a sketch full screen.
-;;     C-c C-e    Export sketch.
-;;     C-c C-d    Find in reference.
-;;     C-c C-f    Find or create sketch.
+;;     C-c C-p r    Run a sketch.
+;;     C-c C-p b    Compile a sketch into .class files.
+;;     C-c C-p p    Run a sketch full screen.
+;;     C-c C-p e    Export sketch.
+;;     C-c C-p d    Find in reference.
+;;     C-c C-p f    Find or create sketch.
+;;     C-c C-p s    Search in Processing forum.
 
 ;;; Code:
 
@@ -349,15 +350,17 @@ When calle interactively, prompt the user for QUERY."
   "Default expressions to highlight in Processing mode.")
 
 (defvar processing-mode-map
-  (let ((processing-mode-map (make-sparse-keymap)))
-    (define-key processing-mode-map "\C-c\C-r" 'processing-sketch-run)
-    (define-key processing-mode-map "\C-c\C-p" 'processing-sketch-present)
-    (define-key processing-mode-map "\C-c\C-b" 'processing-sketch-build)
-    (define-key processing-mode-map "\C-c\C-e" 'processing-export-application)
-    (define-key processing-mode-map "\C-c\C-d" 'processing-find-in-reference)
-    (define-key processing-mode-map "\C-c\C-f" 'processing-find-sketch)
-    (define-key processing-mode-map "\C-c\C-s" 'processing-search-forums)
-    processing-mode-map)
+  (let ((map (make-sparse-keymap))
+        (pmap (make-sparse-keymap)))
+    (define-key pmap "r" 'processing-sketch-run)
+    (define-key pmap "p" 'processing-sketch-present)
+    (define-key pmap "b" 'processing-sketch-build)
+    (define-key pmap "e" 'processing-export-application)
+    (define-key pmap "d" 'processing-find-in-reference)
+    (define-key pmap "f" 'processing-find-sketch)
+    (define-key pmap "s" 'processing-search-forums)
+    (define-key map (kbd "C-c C-p") pmap)
+    map)
   "Keymap for processing major mode.")
 
 (easy-menu-define processing-mode-menu processing-mode-map
