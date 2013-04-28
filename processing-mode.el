@@ -372,7 +372,7 @@ When calle interactively, prompt the user for QUERY."
     ["Export" processing-export-application
      :help "Export processing sketch to application"]
     "---"
-    ["New sketch" processing-create-sketch
+    ["New sketch" processing-find-sketch
      :help "Create a new sketch in the current directory"]
     "---"
     ["Reference" processing-open-reference
