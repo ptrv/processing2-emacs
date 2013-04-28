@@ -356,6 +356,7 @@ When calle interactively, prompt the user for QUERY."
     (define-key pmap "p" 'processing-sketch-present)
     (define-key pmap "b" 'processing-sketch-build)
     (define-key pmap "e" 'processing-export-application)
+    (define-key pmap "h" 'processing-open-reference)
     (define-key pmap "d" 'processing-find-in-reference)
     (define-key pmap "f" 'processing-find-sketch)
     (define-key pmap "s" 'processing-search-forums)
