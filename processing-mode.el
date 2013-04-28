@@ -77,6 +77,12 @@ The path should be something like /usr/bin/processing-java."
   :type 'string
   :group 'processing)
 
+(defcustom processing-forum-search-url "http://forum.processing.org/search/%s"
+  "Search URL of the official Processing forums.
+%s will be replaced with the search query."
+  :type 'string
+  :group 'processing)
+
 (defconst processing-platform
   (cond ((string= system-type "gnu/linux")
          "linux")
@@ -245,6 +251,14 @@ When calle interactively, prompt the user for QUERY."
     (message (concat "The variable `processing-application-dir' is either"
                      "unset or the directory does not exist."))))
 
+(defun processing-search-forums (query)
+  "Search the official Processing forums for the given QUERY and
+  open results in browser."
+  (interactive "sSearch for: ")
+  (let* ((search-query (replace-regexp-in-string "\\s-+" "%20" query))
+         (search-url (format processing-forum-search-url search-query)))
+    (browse-url search-url)))
+
 ;; Regular expressions
 ;; Compilation
 (eval-after-load "compile"
@@ -342,6 +356,7 @@ When calle interactively, prompt the user for QUERY."
     (define-key processing-mode-map "\C-c\C-e" 'processing-export-application)
     (define-key processing-mode-map "\C-c\C-d" 'processing-find-in-reference)
     (define-key processing-mode-map "\C-c\C-f" 'processing-find-sketch)
+    (define-key processing-mode-map "\C-c\C-s" 'processing-search-forums)
     processing-mode-map)
   "Keymap for processing major mode.")
 
@@ -364,6 +379,8 @@ When calle interactively, prompt the user for QUERY."
      :help "Open Processing reference"]
     ["Find in reference" processing-find-in-reference
      :help "Find word under cursor in reference"]
+    ["Search in forums" processing-search-forums
+     :help "Search in the Processing forum"]
     "---"
     ["Settings" (customize-group 'processing)
      :help "Processing settings"]))
