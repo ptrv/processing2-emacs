@@ -53,9 +53,11 @@
 (eval-when-compile
   (require 'compile)
   (require 'cl)
-  (require 'yasnippet)
   (require 'easymenu)
-  (require 'thingatpt))
+  (require 'thingatpt)
+  (require 'cc-vars))
+
+(require 'yasnippet)
 
 (defgroup processing nil
   "Major mode for the Processing language."
@@ -402,14 +404,16 @@ When calle interactively, prompt the user for QUERY."
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
 
-(setq processing-snippets-dir (file-name-directory (or (buffer-file-name)
-                                                       load-file-name)))
+(defvar processing-snippets-root (file-name-directory (or load-file-name
+                                                          (buffer-file-name))))
+
 ;;;###autoload
 (defun processing-snippets-initialize ()
-  (let ((snip-dir (expand-file-name "snippets" processing-snippets-dir)))
+  (let ((snip-dir (expand-file-name "snippets" processing-snippets-root)))
     (if (file-exists-p snip-dir)
         (progn
-          (add-to-list 'yas-snippet-dirs snip-dir t)
+          (when (fboundp 'yas-snippet-dirs)
+            (add-to-list 'yas-snippet-dirs snip-dir t))
           (yas-load-directory snip-dir t))
       (message "Error: Porcessing snippets dir %s is invalid!" snip-dir))))
 
