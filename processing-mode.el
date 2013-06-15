@@ -86,6 +86,11 @@ The path should be something like /usr/bin/processing-java."
   :type 'string
   :group 'processing)
 
+(defcustom processing-keymap-prefix (kbd "C-c C-p")
+  "Processing keymap prefix."
+  :type 'string
+  :group 'processing)
+
 (defconst processing-platform
   (cond ((string= system-type "gnu/linux")
          "linux")
@@ -362,7 +367,7 @@ When calle interactively, prompt the user for QUERY."
     (define-key pmap "d" 'processing-find-in-reference)
     (define-key pmap "f" 'processing-find-sketch)
     (define-key pmap "s" 'processing-search-forums)
-    (define-key map (kbd "C-c C-p") pmap)
+    (define-key map processing-keymap-prefix pmap)
     map)
   "Keymap for processing major mode.")
 
