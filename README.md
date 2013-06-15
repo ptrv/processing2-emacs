@@ -34,7 +34,7 @@ Add the following to set up processing snippets for [yasnippet][1]:
     (autoload 'processing-snippets-initialize "processing-mode" nil nil nil)
     (eval-after-load 'yasnippet '(processing-snippets-initialize))
 
-Optionally it is also possible to set up basic [Audo-Complete][2]
+Optionally it is also possible to set up basic [Auto-Complete][2]
 support to have keyword completion.
 
     (defun processing-mode-init ()
