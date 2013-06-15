@@ -403,6 +403,10 @@ When calle interactively, prompt the user for QUERY."
 \\{java-mode-map}"
   (set (make-local-variable 'c-basic-offset) 2)
   (set (make-local-variable 'tab-width) 2)
+  (set (make-local-variable 'c-indent-level) 2)
+  (set (make-local-variable 'indent-tabs-mode) nil)
+  (make-local-variable 'c-offsets-alist)
+  (c-set-offset 'substatement-open '0)
 
   (font-lock-add-keywords 'processing-mode processing-font-lock-keywords))
 
