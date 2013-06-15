@@ -161,8 +161,8 @@ run type command argument."
 (defun processing-sketch-run ()
   "Run sketch."
   (interactive)
-  (processing-sketch-compile "run")
-  )
+  (processing-sketch-compile "run"))
+
 (defun processing-sketch-present ()
   "Run sketch fullscreen."
   (interactive)
