@@ -71,7 +71,10 @@ The path should be something like /usr/bin/processing-java."
   :group 'processing)
 
 (defcustom processing-application-dir nil
-  "The path of the processing application directory."
+  "The path of the processing application directory.
+
+On a Mac the default directory would be
+`/Applications/Processing.app/Contents/Resources/Java'"
   :type 'string
   :group 'processing)
 

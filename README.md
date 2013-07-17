@@ -41,6 +41,12 @@ Set variables in `.emacs`:
     (setq processing-application-dir "/path/to/processing-application-dir")
     (setq processing-sketch-dir "/path/to/processing-sketch-dir")
 
+For example, on Mac the default settings are the following:
+
+    (setq processing-location "/usr/bin/processing-java")
+    (setq processing-application-dir
+        "/Applications/Processing.app/Contents/Resources/Java")
+    (setq processing-sketch-dir "~/Documents/Processing")
 
 Optionally it is also possible to set up basic [Auto-Complete][2]
 support to have keyword completion.
