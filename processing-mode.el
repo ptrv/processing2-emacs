@@ -6,17 +6,12 @@
 ;; only for more recent versions of Processing.
 
 ;; Copyright (C) 2008, 2009 Rudolf Olah <omouse@gmail.com>
+;; Copyright (C) 2012 Bunny Blake <discolingua@gmail.com>
+;; Copyright (C) 2012, 2013 Peter Vasil <mail@petervasil.net>
 
-;; Modified for Processing 2.0 by Bunny Blake <discolingua@gmail.com>
-;; Processing 2 modifications, November 2012
-
-;; Modified by Peter Vasil <mail@petervasil.net>, November 2012
-
-;; Author: Rudolf Olah <omouse@gmail.com>,
-;;         Bunny Blake <discolingua@gmail.com>,
-;;         Peter Vasil <mail@petervasil.net>,
+;; Author: Peter Vasil <mail@petervasil.net>
 ;; Keywords: languages, snippets
-;; Version: 1.0.0
+;; Version: 1.0
 ;; Package-Requires: ((yasnippet "0.8.0"))
 ;;
 ;; This program is free software: you can redistribute it and/or modify
