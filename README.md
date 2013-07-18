@@ -44,8 +44,7 @@ Set variables in `.emacs`:
 For example, on Mac the default settings are the following:
 
     (setq processing-location "/usr/bin/processing-java")
-    (setq processing-application-dir
-        "/Applications/Processing.app/Contents/Resources/Java")
+    (setq processing-application-dir "/Applications/Processing.app")
     (setq processing-sketch-dir "~/Documents/Processing")
 
 Optionally it is also possible to set up basic [Auto-Complete][2]
