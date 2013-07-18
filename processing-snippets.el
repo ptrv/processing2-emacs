@@ -3,8 +3,9 @@
 ;; Copyright (C) 2013  Peter Vasil
 
 ;; Author: Peter Vasil <mail@petervasil.net>
-;; Keywords: snippets
 ;; Version 1.0.0
+;; Keywords: snippets
+;; URL: https://github.com/ptrv/processing2-emacs
 ;; Package-Requires: ((yasnippet "0.8.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
