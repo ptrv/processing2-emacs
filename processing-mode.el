@@ -282,10 +282,20 @@ When calle interactively, prompt the user for QUERY."
     (user-error (concat "The variable `processing-application-dir' is either"
                         " unset or the directory does not exist."))))
 
+(defun processing--dwim-at-point ()
+  "If there's an active selection, return that.
+Otherwise, get the symbol at point."
+  (if (use-region-p)
+      (buffer-substring-no-properties (region-beginning) (region-end))
+    (if (symbol-at-point)
+        (symbol-name (symbol-at-point)))))
+
 (defun processing-search-forums (query)
   "Search the official Processing forums for the given QUERY and
   open results in browser."
-  (interactive "sSearch for: ")
+  ;; (interactive "sSearch for: ")
+  (interactive (list (read-from-minibuffer
+                      "Search string: " (processing--dwim-at-point))))
   (let* ((search-query (replace-regexp-in-string "\\s-+" "%20" query))
          (search-url (format processing-forum-search-url search-query)))
     (browse-url search-url)))
