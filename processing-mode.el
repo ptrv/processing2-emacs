@@ -12,7 +12,6 @@
 ;; Author: Peter Vasil <mail@petervasil.net>
 ;; Keywords: languages, snippets
 ;; Version: 1.1.0
-;; Package-Requires: ((yasnippet "0.8.0"))
 ;;
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -51,8 +50,6 @@
   (require 'easymenu)
   (require 'thingatpt)
   (require 'cc-vars))
-
-(require 'yasnippet)
 
 (defgroup processing nil
   "Major mode for the Processing language."
@@ -444,23 +441,6 @@ Otherwise, get the symbol at point."
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
-
-(defvar processing-snippets-root (file-name-directory (or load-file-name
-                                                          (buffer-file-name))))
-
-;;;###autoload
-(defun processing-snippets-initialize ()
-  (let ((snip-dir (expand-file-name "snippets" processing-snippets-root)))
-    (if (file-exists-p snip-dir)
-        (progn
-          (when (fboundp 'yas-snippet-dirs)
-            (add-to-list 'yas-snippet-dirs snip-dir t))
-          (yas-load-directory snip-dir t))
-      (user-error "Error: Porcessing snippets dir %s is invalid!" snip-dir))))
-
-;;;###autoload
-(eval-after-load 'yasnippet
-  '(processing-snippets-initialize))
 
 (provide 'processing-mode)
 ;;; processing-mode.el ends here

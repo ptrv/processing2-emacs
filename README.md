@@ -28,7 +28,7 @@ In your `.emacs` file, add this:
 
 Add the following to set up processing snippets for [yasnippet][1]:
 
-    (autoload 'processing-snippets-initialize "processing-mode" nil nil nil)
+    (autoload 'processing-snippets-initialize "processing-snippets" nil nil nil)
     (eval-after-load 'yasnippet '(processing-snippets-initialize))
 
 [1]: https://github.com/capitaomorte/yasnippet
