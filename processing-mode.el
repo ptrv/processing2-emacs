@@ -11,7 +11,7 @@
 
 ;; Author: Peter Vasil <mail@petervasil.net>
 ;; Keywords: languages, snippets
-;; Version: 1.0
+;; Version: 1.1.0
 ;; Package-Requires: ((yasnippet "0.8.0"))
 ;;
 ;; This program is free software: you can redistribute it and/or modify
@@ -59,21 +59,31 @@
   :group 'languages
   :prefix "processing-")
 
-(defcustom processing-location nil
+(defcustom processing-location
+  (cond ((eq system-type 'darwin)
+         "/usr/bin/processing-java")
+        (t nil))
   "The path to the processing-java command line tool.
 The path should be something like /usr/bin/processing-java."
   :type 'string
   :group 'processing)
 
-(defcustom processing-application-dir nil
+(defcustom processing-application-dir
+  (cond ((eq system-type 'darwin)
+         "/Applications/Processing.app")
+        (t nil))
   "The path of the processing application directory.
 
-On a Mac the default directory would be
-`/Applications/Processing.app/Contents/Resources/Java'"
+On a Mac the default path is `/Applications/Processing.app' and
+can also be the directory that contains the app (e.g.
+/Applications)."
   :type 'string
   :group 'processing)
 
-(defcustom processing-sketch-dir nil
+(defcustom processing-sketch-dir
+  (cond ((eq system-type 'darwin)
+         "~/Documents/Processing")
+        (t nil))
   "The path of the processing sketch directory."
   :type 'string
   :group 'processing)
@@ -217,16 +227,31 @@ sketch in current directory."
 
 (defalias 'processing-create-sketch 'processing-find-sketch)
 
+(defun processing-help-dir ()
+  "Return directory that contains help files."
+  (let* ((app-dir (file-name-as-directory processing-application-dir))
+         (help-dir
+          (cond
+           ((string= processing-platform "linux")
+            (concat app-dir "modes/java/reference/"))
+           ((string= processing-platform "macosx")
+            (concat app-dir
+                    (unless (string-match "Processing.app"
+                                          processing-application-dir)
+                      "Processing.app/")
+                    "Contents/Resources/Java/modes/java/reference/"))
+           ((string= processing-platform "windows")
+            app-dir))))
+    help-dir))
+
 (defun processing--open-query-in-reference (query)
   "Open QUERY in Processing reference."
   (let (help-file-fn help-file-keyword)
     (if (and processing-application-dir
-             (file-exists-p processing-application-dir))
+             (file-exists-p (processing-help-dir)))
         (progn
-          (setq help-file-fn (concat (file-name-as-directory processing-application-dir)
-                                     "modes/java/reference/" query ".html"))
-          (setq help-file-keyword (concat (file-name-as-directory processing-application-dir)
-                                          "modes/java/reference/" query "_.html"))
+          (setq help-file-fn (concat (processing-help-dir) query ".html"))
+          (setq help-file-keyword (concat (processing-help-dir) query "_.html"))
           (cond ((file-exists-p help-file-fn) (browse-url help-file-fn))
                 ((file-exists-p help-file-keyword) (browse-url help-file-keyword))
                 (t (message "No help file for %s" query))))
@@ -251,11 +276,11 @@ When calle interactively, prompt the user for QUERY."
 (defun processing-open-reference ()
   "Open Processing reference."
   (interactive)
-  (if (file-exists-p processing-application-dir)
-      (browse-url (concat (file-name-as-directory processing-application-dir)
-                          "modes/java/reference/index.html"))
-    (message (concat "The variable `processing-application-dir' is either"
-                     "unset or the directory does not exist."))))
+  (if (and processing-application-dir
+           (file-exists-p (processing-help-dir)))
+      (browse-url (concat (processing-help-dir) "index.html"))
+    (user-error (concat "The variable `processing-application-dir' is either"
+                        " unset or the directory does not exist."))))
 
 (defun processing-search-forums (query)
   "Search the official Processing forums for the given QUERY and
