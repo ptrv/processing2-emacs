@@ -158,9 +158,9 @@ arguments PLATFORM and BITS."
   (if (and processing-location (file-exists-p processing-location))
       (let ((compilation-error-regexp-alist '(processing)))
         (compile (processing-make-compile-command sketch-dir output-dir cmd platform bits)))
-    (message (concat "The variable `processing-location' is either unset "
-                     "or the path is invalid. Please define the location "
-                     "of the processing command-line executable."))))
+    (user-error (concat "The variable `processing-location' is either unset "
+                        "or the path is invalid. Please define the location "
+                        "of the processing command-line executable."))))
 
 (defun processing-sketch-compile (cmd)
   "Run the Processing Commander application with the current buffer.
@@ -255,8 +255,8 @@ sketch in current directory."
           (cond ((file-exists-p help-file-fn) (browse-url help-file-fn))
                 ((file-exists-p help-file-keyword) (browse-url help-file-keyword))
                 (t (message "No help file for %s" query))))
-      (message (concat "The variable `processing-application-dir' is either unset"
-                       " or the directory does not exist.")))))
+      (user-error (concat "The variable `processing-application-dir' is either"
+                          " unset or the directory does not exist.")))))
 
 (defun processing-search-in-reference (query)
   "Search QUERY in Processing reference.
@@ -446,7 +446,7 @@ When calle interactively, prompt the user for QUERY."
           (when (fboundp 'yas-snippet-dirs)
             (add-to-list 'yas-snippet-dirs snip-dir t))
           (yas-load-directory snip-dir t))
-      (message "Error: Porcessing snippets dir %s is invalid!" snip-dir))))
+      (user-error "Error: Porcessing snippets dir %s is invalid!" snip-dir))))
 
 ;;;###autoload
 (eval-after-load 'yasnippet
