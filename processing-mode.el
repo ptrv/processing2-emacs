@@ -98,14 +98,12 @@ can also be the directory that contains the app (e.g.
   :group 'processing)
 
 (defconst processing-platform
-  (cond ((string= system-type "gnu/linux")
-         "linux")
-        ((or (string= system-type "darwin") (string= system-type "macos"))
-         "macosx")
-        ((or (string= system-type "ms-dos") (string= system-type "windows-nt")
-             (string= system-type "cygwin"))
-         "windows"))
-  "The platform that Processing is running on.  It can be `linux', `macosx' or `windows'.")
+  (cond ((eq system-type 'gnu/linux) "linux")
+        ((eq system-type 'darwin) "macosx")
+        ((or (eq system-type 'ms-dos) (eq system-type 'windows-nt)
+             (eq system-type 'cygwin)) "windows"))
+  "The platform that Processing is running on. It can be `linux',
+  `macosx' or `windows'.")
 
 (defconst processing-platform-bits
   (if (string-match "64" system-configuration) "64" "32"))
@@ -137,7 +135,7 @@ running on will be selected."
           ;; "\" --output=\"" (expand-file-name output-dir)
           ;; Remove this comment when Processing implements the --preferences=??? command-line option.
           ;;"\" --preferences=\"" (expand-file-name "~/.processing/preferences.txt")
-          "\" --" cmd
+          "\" --" (if (symbolp 'cmd) (symbol-name cmd) cmd)
           (if (string= cmd "export")
               (concat " --platform="
                       (if platform platform processing-platform)
@@ -172,26 +170,26 @@ run type command argument."
 (defun processing-sketch-run ()
   "Run sketch."
   (interactive)
-  (processing-sketch-compile "run"))
+  (processing-sketch-compile 'run))
 
 (defun processing-sketch-present ()
   "Run sketch fullscreen."
   (interactive)
-  (processing-sketch-compile "present"))
+  (processing-sketch-compile 'present))
 
 (defun processing-sketch-build ()
   "Run the build command for a Processing sketch.
 Processing will process the sketch into .java files and then
 compile them into .class files."
   (interactive)
-  (processing-sketch-compile "build"))
+  (processing-sketch-compile 'build))
 
 (defun processing-export-application ()
   "Turn the Processing sketch into a Java application.
 Assumes that the platform target is whatever platform Emacs is
 running on."
   (interactive)
-  (processing-sketch-compile "export"))
+  (processing-sketch-compile 'export))
 
 ;; Add hook so that when processing-mode is loaded, the local variable
 ;; 'compile-command is set.
@@ -225,31 +223,31 @@ sketch in current directory."
 
 (defalias 'processing-create-sketch 'processing-find-sketch)
 
-(defun processing-help-dir ()
+(defun processing--help-dir ()
   "Return directory that contains help files."
   (let* ((app-dir (file-name-as-directory processing-application-dir))
          (help-dir
           (cond
-           ((string= processing-platform "linux")
+           ((eq system-type 'gnu/linux)
             (concat app-dir "modes/java/reference/"))
-           ((string= processing-platform "macosx")
+           ((eq system-type 'darwin)
             (concat app-dir
                     (unless (string-match "Processing.app"
                                           processing-application-dir)
                       "Processing.app/")
                     "Contents/Resources/Java/modes/java/reference/"))
-           ((string= processing-platform "windows")
-            app-dir))))
+           ((or (eq system-type 'ms-dos) (eq system-type 'windows-nt)
+                (eq system-type 'cygwin)) app-dir))))
     help-dir))
 
 (defun processing--open-query-in-reference (query)
   "Open QUERY in Processing reference."
   (let (help-file-fn help-file-keyword)
     (if (and processing-application-dir
-             (file-exists-p (processing-help-dir)))
+             (file-exists-p (processing--help-dir)))
         (progn
-          (setq help-file-fn (concat (processing-help-dir) query ".html"))
-          (setq help-file-keyword (concat (processing-help-dir) query "_.html"))
+          (setq help-file-fn (concat (processing--help-dir) query ".html"))
+          (setq help-file-keyword (concat (processing--help-dir) query "_.html"))
           (cond ((file-exists-p help-file-fn) (browse-url help-file-fn))
                 ((file-exists-p help-file-keyword) (browse-url help-file-keyword))
                 (t (message "No help file for %s" query))))
@@ -275,8 +273,8 @@ When calle interactively, prompt the user for QUERY."
   "Open Processing reference."
   (interactive)
   (if (and processing-application-dir
-           (file-exists-p (processing-help-dir)))
-      (browse-url (concat (processing-help-dir) "index.html"))
+           (file-exists-p (processing--help-dir)))
+      (browse-url (concat (processing--help-dir) "index.html"))
     (user-error (concat "The variable `processing-application-dir' is either"
                         " unset or the directory does not exist."))))
 
