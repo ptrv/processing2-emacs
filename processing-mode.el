@@ -58,18 +58,18 @@
   :prefix "processing-")
 
 (defcustom processing-location
-  (cond ((eq system-type 'darwin)
-         "/usr/bin/processing-java")
-        (t nil))
+  (eval (cond ((eq system-type 'darwin)
+               "/usr/bin/processing-java")
+              (t nil)))
   "The path to the processing-java command line tool.
 The path should be something like /usr/bin/processing-java."
   :type 'string
   :group 'processing)
 
 (defcustom processing-application-dir
-  (cond ((eq system-type 'darwin)
-         "/Applications/Processing.app")
-        (t nil))
+  (eval (cond ((eq system-type 'darwin)
+               "/Applications/Processing.app")
+              (t nil)))
   "The path of the processing application directory.
 
 On a Mac the default path is `/Applications/Processing.app' and
@@ -79,9 +79,9 @@ can also be the directory that contains the app (e.g.
   :group 'processing)
 
 (defcustom processing-sketch-dir
-  (cond ((eq system-type 'darwin)
-         "~/Documents/Processing")
-        (t nil))
+  (eval (cond ((eq system-type 'darwin)
+               "~/Documents/Processing")
+              (t nil)))
   "The path of the processing sketch directory."
   :type 'string
   :group 'processing)
