@@ -18,18 +18,24 @@ installed.
 
 To install `processing-mode` manually, clone the repository:
 
-    git clone https://github.com/ptrv/processing2-emacs
+```lisp
+git clone https://github.com/ptrv/processing2-emacs
+```
 
 In your `.emacs` file, add this:
 
-    (add-to-list 'load-path "/path/to/processing2-emacs/")
-    (autoload 'processing-mode "processing-mode" "Processing mode" t)
-    (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
+```lisp
+(add-to-list 'load-path "/path/to/processing2-emacs/")
+(autoload 'processing-mode "processing-mode" "Processing mode" t)
+(add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
+```
 
 Add the following to set up processing snippets for [yasnippet][1]:
 
-    (autoload 'processing-snippets-initialize "processing-snippets" nil nil nil)
-    (eval-after-load 'yasnippet '(processing-snippets-initialize))
+```lisp
+(autoload 'processing-snippets-initialize "processing-snippets" nil nil nil)
+(eval-after-load 'yasnippet '(processing-snippets-initialize))
+```
 
 [1]: https://github.com/capitaomorte/yasnippet
 
@@ -37,30 +43,36 @@ Add the following to set up processing snippets for [yasnippet][1]:
 
 Set variables in `.emacs`:
 
-    (setq processing-location "/path/to/processing-java")
-    (setq processing-application-dir "/path/to/processing-application-dir")
-    (setq processing-sketch-dir "/path/to/processing-sketch-dir")
+```lisp
+(setq processing-location "/path/to/processing-java")
+(setq processing-application-dir "/path/to/processing-application-dir")
+(setq processing-sketch-dir "/path/to/processing-sketch-dir")
+```
 
 For example, on Mac the default settings are the following:
 
-    (setq processing-location "/usr/bin/processing-java")
-    (setq processing-application-dir "/Applications/Processing.app")
-    (setq processing-sketch-dir "~/Documents/Processing")
+```lisp
+(setq processing-location "/usr/bin/processing-java")
+(setq processing-application-dir "/Applications/Processing.app")
+(setq processing-sketch-dir "~/Documents/Processing")
+```
 
 Optionally it is also possible to set up basic [Auto-Complete][2]
 support to have keyword completion.
 
-    (defun processing-mode-init ()
-      (make-local-variable 'ac-sources)
-      (setq ac-sources '(ac-source-dictionary ac-source-yasnippet))
-      (make-local-variable 'ac-user-dictionary)
-      (setq ac-user-dictionary (append processing-functions
-                                       processing-builtins
-                                       processing-constants)))
 
-    (add-to-list 'ac-modes 'processing-mode)
-    (add-hook 'processing-mode-hook 'processing-mode-init)
+```lisp
+(defun processing-mode-init ()
+  (make-local-variable 'ac-sources)
+  (setq ac-sources '(ac-source-dictionary ac-source-yasnippet))
+  (make-local-variable 'ac-user-dictionary)
+  (setq ac-user-dictionary (append processing-functions
+                                   processing-builtins
+                                   processing-constants)))
 
+(add-to-list 'ac-modes 'processing-mode)
+(add-hook 'processing-mode-hook 'processing-mode-init)
+```
 [2]: http://cx4a.org/software/auto-complete/
 
 ## Usage
