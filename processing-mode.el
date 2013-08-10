@@ -74,6 +74,14 @@ can also be the directory that contains the app (e.g.
   :type 'string
   :group 'processing)
 
+(defcustom processing-output-dir nil
+  "The output path of the processing command.
+
+If NIL, create output directory in current sketch folder."
+  :type '(choice (const :tag "Sub-directory `output' in current Sketch" nil)
+                 (string :tag "Path to output directory"))
+  :group 'processing)
+
 (defcustom processing-forum-search-url "http://forum.processing.org/search/%s"
   "Search URL of the official Processing forums.
 %s will be replaced with the search query."
@@ -146,14 +154,34 @@ arguments PLATFORM and BITS."
                         "or the path is invalid. Please define the location "
                         "of the processing command-line executable."))))
 
+(defun* processing--get-output-dir ()
+  "Return the output path to use for the procesing command.
+
+If `processing-output-dir' is NIL use sub-directory ``output'' in
+Sketch directory as output path."
+  (if processing-output-dir
+      (let* ((sketch-name (file-name-base
+                          (directory-file-name
+                           (file-name-directory buffer-file-name))))
+            (out-dir (file-name-as-directory processing-output-dir)))
+        (unless (file-exists-p out-dir)
+          (if (yes-or-no-p (concat "Output directory \""
+                                   processing-output-dir
+                                   "\" does not exist! Create?"))
+              (make-directory out-dir t)
+            (return-from processing--get-output-dir nil)))
+        (concat out-dir sketch-name "_output"))
+    (concat (file-name-directory buffer-file-name) "output")))
+
 (defun processing-sketch-compile (cmd)
-  "Run the Processing Commander application with the current buffer.
-The output directory is the sub-directory ``output'' which will
-be found in the parent directory of the buffer file. CMD is the
-run type command argument."
-  ;; TODO: Add support for temporary sketches
-  (let ((sketch-dir (file-name-directory buffer-file-name)))
-    (processing-commander sketch-dir (concat sketch-dir "output") cmd)))
+  "Run the Processing Commander application with the current Sketch.
+
+CMD is the run type command argument."
+  (let ((sketch-dir (file-name-directory buffer-file-name))
+        (output-dir (processing--get-output-dir)))
+    (if output-dir
+        (processing-commander sketch-dir output-dir cmd)
+      (message "processing-sketch-compile: No output directory!"))))
 
 (defun processing-sketch-run ()
   "Run sketch."
