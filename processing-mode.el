@@ -152,7 +152,8 @@ It is constructed using the ``processing-make-compile-command''
 function. Arguments are SKETCH-DIR, OUTPUT-DIR and CMD. Optional
 arguments PLATFORM and BITS."
   (if (and processing-location (file-exists-p processing-location))
-      (compile (processing-make-compile-command sketch-dir output-dir cmd platform bits))
+      (compile (processing-make-compile-command sketch-dir output-dir cmd platform bits)
+               'processing-compilation-mode)
     (user-error (concat "The variable `processing-location' is either unset "
                         "or the path is invalid. Please define the location "
                         "of the processing command-line executable."))))
@@ -425,14 +426,16 @@ Otherwise, get the symbol at point."
   (set (make-local-variable 'indent-tabs-mode) nil)
   (make-local-variable 'c-offsets-alist)
   (c-set-offset 'substatement-open '0)
-
-  (set (make-local-variable 'compilation-error-regexp-alist)
-       (cons 'processing 'compilation-error-regexp-alist))
-  (set (make-local-variable 'compilation-error-regexp-alist-alist)
-       (cons '(processing "^\\([[:alnum:]]+.pde\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3)
-             'compilation-error-regexp-alist-alist))
-
   (font-lock-add-keywords 'processing-mode processing-font-lock-keywords))
+
+(define-derived-mode processing-compilation-mode
+  compilation-mode "Processing Compilation"
+  "Compilation mode for Processing."
+  (set (make-local-variable 'compilation-error-regexp-alist)
+       (cons 'processing compilation-error-regexp-alist))
+  (set (make-local-variable 'compilation-error-regexp-alist-alist)
+       (cons '(processing "^\\([[:alnum:]\\_\\/]+\\.pde\\):\\([0-9]+\\):.*$" 1 2)
+             compilation-error-regexp-alist-alist)))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
