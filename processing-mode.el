@@ -207,19 +207,22 @@ running on."
 If ARG is non nil or `processing-sketch-dir' is nil create new
 sketch in current directory."
   (interactive "sSketch name: \nP")
-  (let ((name (remove ?\s name)))
-    (if (not (string-equal "" name))
-        (progn
-          (let ((sketch-dir name)
-                (sketch-name name))
-            (if (and processing-sketch-dir
-                     (not arg))
-                (setq sketch-dir (concat
-                                  (file-name-as-directory processing-sketch-dir)
-                                  sketch-dir)))
-            (make-directory sketch-dir t)
-            (find-file (concat sketch-dir "/" sketch-name ".pde"))))
-      (error "Please provide a sketch name"))))
+  (let* ((name (remove ?\s name))
+         (tmp-name (replace-regexp-in-string "[-]" "_" name)))
+    (when (string-equal "" name)
+      (error "Please provide a sketch name"))
+    (unless (string= tmp-name name)
+      (message "File '%s' has been renamed to '%s'!" name tmp-name)
+      (setq name tmp-name))
+    (let ((sketch-dir name)
+          (sketch-name name))
+      (if (and processing-sketch-dir
+               (not arg))
+          (setq sketch-dir (concat
+                            (file-name-as-directory processing-sketch-dir)
+                            sketch-dir)))
+      (make-directory sketch-dir t)
+      (find-file (concat sketch-dir "/" sketch-name ".pde")))))
 
 (defalias 'processing-create-sketch 'processing-find-sketch)
 
