@@ -31,18 +31,6 @@
 
 ;; Major mode for Processing 2.0.
 
-;; Usage:
-
-;; The key-bindings are:
-
-;;     C-c C-p r    Run a sketch.
-;;     C-c C-p b    Compile a sketch into .class files.
-;;     C-c C-p p    Run a sketch full screen.
-;;     C-c C-p e    Export sketch.
-;;     C-c C-p d    Find in reference.
-;;     C-c C-p f    Find or create sketch.
-;;     C-c C-p s    Search in Processing forum.
-
 ;;; Code:
 
 (eval-when-compile
@@ -190,16 +178,6 @@ Assumes that the platform target is whatever platform Emacs is
 running on."
   (interactive)
   (processing-sketch-compile 'export))
-
-;; Add hook so that when processing-mode is loaded, the local variable
-;; 'compile-command is set.
-;; (add-hook 'processing-mode-hook
-;;       (lambda ()
-;;         (let ((sketch-dir (file-name-directory buffer-file-name)))
-;;           (set (make-local-variable 'compile-command)
-;;                (processing-make-compile-command sketch-dir
-;;                                                 (concat sketch-dir "output")
-;;                                                 "build")))))
 
 ;;;###autoload
 (defun processing-find-sketch (name &optional arg)
