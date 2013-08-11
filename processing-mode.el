@@ -115,32 +115,34 @@ arguments are PLATFORM and BITS.
 
 Valid types of commands are:
 
-  - \"preprocess\"
   - \"build\"
   - \"run\"
   - \"present\"
-  - \"export-applet\"
-  - \"export-application\"
+  - \"export\"
 
 When ``cmd'' is set to \"export-application\", the ``platform''
 must be set to one of \"windows\", \"macosx\", or \"linux\". If
 no platform is selected, the default platform that Emacs is
 running on will be selected."
-  (concat processing-location
-          " --force --sketch=\"" (expand-file-name sketch-dir)
-          ;; "\" --output=\"" (expand-file-name output-dir)
-          ;; Remove this comment when Processing implements the --preferences=??? command-line option.
-          ;;"\" --preferences=\"" (expand-file-name "~/.processing/preferences.txt")
-          "\" --" (if (symbolp 'cmd) (symbol-name cmd) cmd)
-          (if (string= cmd "export")
-              (concat " --platform="
-                      (if platform platform processing-platform)
-                      " --bits="
-                      (if bits bits processing-platform-bits)
-                      " --output=\"" (expand-file-name
-                                      (concat "application."
-                                              (if platform platform processing-platform))) "\"")
-            (concat " --output=\"" (expand-file-name output-dir) "\""))))
+  (let* ((sketch-name (expand-file-name sketch-dir))
+         (cmd-type (if (symbolp 'cmd) (symbol-name cmd) cmd))
+         (run-out-dir (expand-file-name output-dir))
+         (run-opts (concat " --output="
+                           (shell-quote-argument run-out-dir)))
+         (export? (if (string= cmd-type "export") t nil))
+         (export-platform (if platform platform processing-platform))
+         (export-bits (if bits bits processing-platform-bits))
+         (export-out-dir (expand-file-name
+                          (concat (file-name-as-directory sketch-dir)
+                                  "application." export-platform)))
+         (export-opts (concat " --platform=" export-platform
+                              " --bits=" export-bits
+                              " --output="
+                              (shell-quote-argument export-out-dir))))
+    (concat processing-location
+            " --force --sketch=" (shell-quote-argument sketch-name)
+            " --" cmd-type
+            (if export? export-opts run-opts))))
 
 (defun processing-commander (sketch-dir output-dir cmd &optional platform bits)
   "Run the Processing compiler, using a `compile-command'.
