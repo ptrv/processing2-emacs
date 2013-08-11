@@ -232,38 +232,43 @@ sketch in current directory."
       (make-directory sketch-dir t)
       (find-file (concat sketch-dir "/" sketch-name ".pde")))))
 
-(defalias 'processing-create-sketch 'processing-find-sketch)
+(define-obsolete-function-alias
+  'processing-create-sketch 'processing-find-sketch "1.2.0")
 
-(defun processing--help-dir ()
-  "Return directory that contains help files."
+(defun processing--sub-dir (sub-dir)
   (let* ((app-dir (file-name-as-directory processing-application-dir))
-         (help-dir
+         (subdir
           (cond
            ((eq system-type 'gnu/linux)
-            (concat app-dir "modes/java/reference/"))
+            (concat app-dir sub-dir))
            ((eq system-type 'darwin)
             (concat app-dir
                     (unless (string-match "Processing.app"
                                           processing-application-dir)
                       "Processing.app/")
-                    "Contents/Resources/Java/modes/java/reference/"))
+                    "Contents/Resources/Java/" sub-dir))
            ((or (eq system-type 'ms-dos) (eq system-type 'windows-nt)
                 (eq system-type 'cygwin)) app-dir))))
-    help-dir))
+    subdir))
+
+(defun processing--get-dir (dir)
+  (let ((the-dir (processing--sub-dir dir)))
+    (if (and processing-application-dir
+             (file-exists-p the-dir))
+        the-dir
+      (user-error (concat "The variable `processing-application-dir' is either"
+                          " unset or the directory does not exist.")))))
 
 (defun processing--open-query-in-reference (query)
   "Open QUERY in Processing reference."
-  (let (help-file-fn help-file-keyword)
-    (if (and processing-application-dir
-             (file-exists-p (processing--help-dir)))
-        (progn
-          (setq help-file-fn (concat (processing--help-dir) query ".html"))
-          (setq help-file-keyword (concat (processing--help-dir) query "_.html"))
-          (cond ((file-exists-p help-file-fn) (browse-url help-file-fn))
-                ((file-exists-p help-file-keyword) (browse-url help-file-keyword))
-                (t (message "No help file for %s" query))))
-      (user-error (concat "The variable `processing-application-dir' is either"
-                          " unset or the directory does not exist.")))))
+  (let ((help-dir (processing--get-dir "modes/java/reference/"))
+        help-file-fn help-file-keyword)
+    (when help-dir
+      (setq help-file-fn (concat help-dir query ".html"))
+      (setq help-file-keyword (concat help-dir query "_.html"))
+      (cond ((file-exists-p help-file-fn) (browse-url help-file-fn))
+            ((file-exists-p help-file-keyword) (browse-url help-file-keyword))
+            (t (message "No help file for %s" query))))))
 
 (defun processing-search-in-reference (query)
   "Search QUERY in Processing reference.
@@ -283,10 +288,23 @@ When calle interactively, prompt the user for QUERY."
 (defun processing-open-reference ()
   "Open Processing reference."
   (interactive)
-  (if (and processing-application-dir
-           (file-exists-p (processing--help-dir)))
-      (browse-url (concat (processing--help-dir) "index.html"))
-    (user-error (concat "The variable `processing-application-dir' is either"
+  (let ((help-dir (processing--get-dir "modes/java/reference/")))
+    (when help-dir
+      (browse-url (concat help-dir "index.html")))))
+
+(defun processing-open-examples ()
+  "Open examples folder in dired."
+  (interactive)
+  (let ((examples-dir (processing--get-dir "modes/java/examples")))
+    (when examples-dir
+      (find-file examples-dir))))
+
+(defun processing-open-sketchbook ()
+  "Open sketchbook."
+  (interactive)
+  (if (file-exists-p processing-sketch-dir)
+      (find-file processing-sketch-dir)
+    (user-error (concat "The variable `processing-sketch-dir' is either"
                         " unset or the directory does not exist."))))
 
 (defun processing--dwim-at-point ()
@@ -395,9 +413,11 @@ Otherwise, get the symbol at point."
     (define-key pmap "b" 'processing-sketch-build)
     (define-key pmap "e" 'processing-export-application)
     (define-key pmap "h" 'processing-open-reference)
+    (define-key pmap "l" 'processing-open-examples)
     (define-key pmap "d" 'processing-find-in-reference)
     (define-key pmap "f" 'processing-find-sketch)
     (define-key pmap "s" 'processing-search-forums)
+    (define-key pmap "o" 'processing-open-sketchbook)
     (define-key map processing-keymap-prefix pmap)
     map)
   "Keymap for processing major mode.")
@@ -415,14 +435,18 @@ Otherwise, get the symbol at point."
      :help "Export processing sketch to application"]
     "---"
     ["New sketch" processing-find-sketch
-     :help "Create a new sketch in the current directory"]
+     :help "Create a new sketch or open an existing"]
     "---"
+    ["Examples" processing-open-examples
+     :help "Open examples folder"]
     ["Reference" processing-open-reference
      :help "Open Processing reference"]
     ["Find in reference" processing-find-in-reference
      :help "Find word under cursor in reference"]
     ["Search in forums" processing-search-forums
      :help "Search in the Processing forum"]
+    ["Open Sketchbook" processing-open-sketchbook
+     :help "Open sketchbook folder"]
     "---"
     ["Settings" (customize-group 'processing)
      :help "Processing settings"]))
