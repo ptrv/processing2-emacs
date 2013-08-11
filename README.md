@@ -41,7 +41,8 @@ Add the following to set up processing snippets for [yasnippet][1]:
 
 ## Configuration
 
-Set variables in `.emacs`:
+Set variables in `.emacs` or with `customize-group RET processing RET`
+(this works only after `processing-mode` has been loaded):
 
 ```lisp
 (setq processing-location "/path/to/processing-java")
@@ -55,6 +56,15 @@ For example, on Mac the default settings are the following:
 (setq processing-location "/usr/bin/processing-java")
 (setq processing-application-dir "/Applications/Processing.app")
 (setq processing-sketch-dir "~/Documents/Processing")
+```
+
+Usually when you run a processing sketch, the build files are generated
+in a sub-directory called `output` in the current sketch directory. It
+is also possible to set the `processing-output-dir` to another
+directory:
+
+```lisp
+(setq processing-output-dir "/tmp/processing")
 ```
 
 Optionally it is also possible to set up basic [Auto-Complete][2]
