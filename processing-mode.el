@@ -161,9 +161,9 @@ If `processing-output-dir' is NIL use sub-directory ``output'' in
 Sketch directory as output path."
   (if processing-output-dir
       (let* ((sketch-name (file-name-base
-                          (directory-file-name
-                           (file-name-directory buffer-file-name))))
-            (out-dir (file-name-as-directory processing-output-dir)))
+                           (directory-file-name
+                            (file-name-directory buffer-file-name))))
+             (out-dir (file-name-as-directory processing-output-dir)))
         (unless (file-exists-p out-dir)
           (if (yes-or-no-p (concat "Output directory \""
                                    processing-output-dir
