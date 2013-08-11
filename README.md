@@ -64,7 +64,7 @@ is also possible to set the `processing-output-dir` to another
 directory:
 
 ```lisp
-(setq processing-output-dir "/tmp/processing")
+(setq processing-output-dir "/tmp")
 ```
 
 Optionally it is also possible to set up basic [Auto-Complete][2]
