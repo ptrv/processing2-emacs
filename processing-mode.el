@@ -10,7 +10,7 @@
 ;; Copyright (C) 2012, 2013 Peter Vasil <mail@petervasil.net>
 
 ;; Author: Peter Vasil <mail@petervasil.net>
-;; Version: 1.1.2
+;; Version: 1.2.0
 ;; Keywords: languages, snippets
 ;; URL: https://github.com/ptrv/processing2-emacs
 ;;
