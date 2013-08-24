@@ -40,6 +40,14 @@
   (require 'thingatpt)
   (require 'cc-vars))
 
+;;;; Compatibility
+(eval-and-compile
+  ;; `setq-local' for Emacs 24.2 and below
+  (unless (fboundp 'setq-local)
+    (defmacro setq-local (var val)
+      "Set variable VAR to value VAL in current buffer."
+      `(set (make-local-variable ',var) ,val))))
+
 (defgroup processing nil
   "Major mode for the Processing language."
   :group 'languages
@@ -98,8 +106,8 @@ If NIL, create output directory in current sketch folder."
         ((eq system-type 'darwin) "macosx")
         ((or (eq system-type 'ms-dos) (eq system-type 'windows-nt)
              (eq system-type 'cygwin)) "windows"))
-  "The platform that Processing is running on. It can be `linux',
-  `macosx' or `windows'.")
+  "The platform that Processing is running on.
+It can be `linux', `macosx' or `windows'.")
 
 (defconst processing-platform-bits
   (if (string-match "64" system-configuration) "64" "32"))
@@ -456,21 +464,20 @@ Otherwise, get the symbol at point."
   java-mode "Processing"
   "Major mode for Processing.
 \\{java-mode-map}"
-  (set (make-local-variable 'c-basic-offset) 2)
-  (set (make-local-variable 'tab-width) 2)
-  (set (make-local-variable 'indent-tabs-mode) nil)
-  (make-local-variable 'c-offsets-alist)
+  (setq-local c-basic-offset 2)
+  (setq-local tab-width 2)
+  (setq-local indent-tabs-mode nil)
   (c-set-offset 'substatement-open '0)
   (font-lock-add-keywords 'processing-mode processing-font-lock-keywords))
 
 (define-derived-mode processing-compilation-mode
   compilation-mode "Processing Compilation"
   "Compilation mode for Processing."
-  (set (make-local-variable 'compilation-error-regexp-alist)
-       (cons 'processing compilation-error-regexp-alist))
-  (set (make-local-variable 'compilation-error-regexp-alist-alist)
-       (cons '(processing "^\\([[:alnum:]\\_\\/]+\\.pde\\):\\([0-9]+\\):.*$" 1 2)
-             compilation-error-regexp-alist-alist)))
+  (setq-local compilation-error-regexp-alist
+              (cons 'processing compilation-error-regexp-alist))
+  (setq-local compilation-error-regexp-alist-alist
+              (cons '(processing "^\\([[:alnum:]\\_\\/]+\\.pde\\):\\([0-9]+\\):.*$" 1 2)
+                    compilation-error-regexp-alist-alist)))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
