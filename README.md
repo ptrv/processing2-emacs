@@ -47,7 +47,7 @@ Set variables in `.emacs` or with `customize-group RET processing RET`
 ```lisp
 (setq processing-location "/path/to/processing-java")
 (setq processing-application-dir "/path/to/processing-application-dir")
-(setq processing-sketch-dir "/path/to/processing-sketch-dir")
+(setq processing-sketchbook-dir "/path/to/processing-sketchbook-dir")
 ```
 
 For example, on Mac the default settings are the following:
@@ -55,7 +55,7 @@ For example, on Mac the default settings are the following:
 ```lisp
 (setq processing-location "/usr/bin/processing-java")
 (setq processing-application-dir "/Applications/Processing.app")
-(setq processing-sketch-dir "~/Documents/Processing")
+(setq processing-sketchbook-dir "~/Documents/Processing")
 ```
 
 Usually when you run a processing sketch, the build files are generated
@@ -70,7 +70,6 @@ directory:
 Optionally it is also possible to set up basic [Auto-Complete][2]
 support to have keyword completion.
 
-
 ```lisp
 (defun processing-mode-init ()
   (make-local-variable 'ac-sources)
@@ -83,6 +82,7 @@ support to have keyword completion.
 (add-to-list 'ac-modes 'processing-mode)
 (add-hook 'processing-mode-hook 'processing-mode-init)
 ```
+
 [2]: http://cx4a.org/software/auto-complete/
 
 ## Usage

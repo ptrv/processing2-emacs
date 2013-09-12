@@ -10,7 +10,7 @@
 ;; Copyright (C) 2012, 2013 Peter Vasil <mail@petervasil.net>
 
 ;; Author: Peter Vasil <mail@petervasil.net>
-;; Version: 1.2.0
+;; Version: 1.2.1
 ;; Keywords: languages, snippets
 ;; URL: https://github.com/ptrv/processing2-emacs
 ;;
@@ -74,13 +74,18 @@ can also be the directory that contains the app (e.g.
   :type 'string
   :group 'processing)
 
-(defcustom processing-sketch-dir
+(defcustom processing-sketchbook-dir
   (eval (cond ((eq system-type 'darwin)
                "~/Documents/Processing")
               (t nil)))
   "The path of the processing sketch directory."
   :type 'string
   :group 'processing)
+
+(define-obsolete-variable-alias
+  'processing-sketch-dir
+  'processing-sketchbook-dir
+  "1.2.1")
 
 (defcustom processing-output-dir nil
   "The output path of the processing command.
@@ -219,8 +224,8 @@ running on."
 
 ;;;###autoload
 (defun processing-find-sketch (name &optional arg)
-  "Find a processing sketch with NAME in `processing-sketch-dir'.
-If ARG is non nil or `processing-sketch-dir' is nil create new
+  "Find a processing sketch with NAME in `processing-sketchbook-dir'.
+If ARG is non nil or `processing-sketchbook-dir' is nil create new
 sketch in current directory."
   (interactive "sSketch name: \nP")
   (let* ((name (remove ?\s name))
@@ -232,10 +237,10 @@ sketch in current directory."
       (setq name tmp-name))
     (let ((sketch-dir name)
           (sketch-name name))
-      (if (and processing-sketch-dir
+      (if (and processing-sketchbook-dir
                (not arg))
           (setq sketch-dir (concat
-                            (file-name-as-directory processing-sketch-dir)
+                            (file-name-as-directory processing-sketchbook-dir)
                             sketch-dir)))
       (make-directory sketch-dir t)
       (find-file (concat sketch-dir "/" sketch-name ".pde")))))
@@ -310,10 +315,11 @@ When calle interactively, prompt the user for QUERY."
 (defun processing-open-sketchbook ()
   "Open sketchbook."
   (interactive)
-  (if (file-exists-p processing-sketch-dir)
-      (find-file processing-sketch-dir)
-    (user-error (concat "The variable `processing-sketch-dir' is either"
-                        " unset or the directory does not exist."))))
+  (if (file-exists-p processing-sketchbook-dir)
+      (find-file processing-sketchbook-dir)
+    (user-error (concat "The variable `processing-sketchbook-dir'"
+                        " is either unset or the directory does"
+                        " not exist."))))
 
 (defun processing--dwim-at-point ()
   "If there's an active selection, return that.
