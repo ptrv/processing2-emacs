@@ -58,6 +58,7 @@
                "/usr/bin/processing-java")
               (t nil)))
   "The path to the processing-java command line tool.
+
 The path should be something like /usr/bin/processing-java."
   :type 'string
   :group 'processing)
@@ -77,6 +78,8 @@ can also be the directory that contains the app (e.g.
 (defcustom processing-sketchbook-dir
   (eval (cond ((eq system-type 'darwin)
                "~/Documents/Processing")
+              ((eq system-type 'gnu/linux)
+               "~/sketchbook")
               (t nil)))
   "The path of the processing sketch directory."
   :type 'string
