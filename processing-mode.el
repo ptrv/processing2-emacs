@@ -98,7 +98,7 @@ If NIL, create output directory in current sketch folder."
                  (string :tag "Path to output directory"))
   :group 'processing)
 
-(defcustom processing-forum-search-url "http://forum.processing.org/search/%s"
+(defcustom processing-forum-search-url "http://forum.processing.org/two/search?Search=%s"
   "Search URL of the official Processing forums.
 %s will be replaced with the search query."
   :type 'string
