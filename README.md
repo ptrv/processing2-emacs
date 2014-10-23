@@ -1,5 +1,7 @@
 # Emacs major-mode for Processing 2.0
 
+[![MELPA](http://melpa.org/packages/processing-mode-badge.svg)](http://melpa.org/#/processing-mode)
+
 Based on Rudolf Olah's version and modification by Bunny Blake.
 
 https://github.com/emacsmirror/processing-mode
