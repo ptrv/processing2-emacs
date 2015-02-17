@@ -7,10 +7,10 @@
 
 ;; Copyright (C) 2008, 2009 Rudolf Olah <omouse@gmail.com>
 ;; Copyright (C) 2012 Bunny Blake <discolingua@gmail.com>
-;; Copyright (C) 2012, 2013 Peter Vasil <mail@petervasil.net>
+;; Copyright (C) 2012 - 2015 Peter Vasil <mail@petervasil.net>
 
 ;; Author: Peter Vasil <mail@petervasil.net>
-;; Version: 1.2.1
+;; Version: 1.3.0
 ;; Keywords: languages, snippets
 ;; URL: https://github.com/ptrv/processing2-emacs
 ;;
@@ -435,6 +435,7 @@ Otherwise, get the symbol at point."
     (define-key pmap "f" 'processing-find-sketch)
     (define-key pmap "s" 'processing-search-forums)
     (define-key pmap "o" 'processing-open-sketchbook)
+    (define-key pmap "z" 'processing-copy-as-html)
     (define-key map processing-keymap-prefix pmap)
     map)
   "Keymap for processing major mode.")
@@ -465,8 +466,36 @@ Otherwise, get the symbol at point."
     ["Open Sketchbook" processing-open-sketchbook
      :help "Open sketchbook folder"]
     "---"
+    ["Copy as HTML" processing-copy-as-html
+     :help "Copy buffer or region as HTML to clipboard"]
+    "---"
     ["Settings" (customize-group 'processing)
      :help "Processing settings"]))
+
+;; If htmlize is installed, provide this function to copy buffer or
+;; region to clipboard
+(defun processing-copy-as-html (&optional arg)
+  "Copy buffer or region to clipboard htmlized.
+If ARG is non-nil switch to htmlized buffer instead copying to clipboard."
+  (interactive "P")
+  (if (and (fboundp 'htmlize-buffer)
+           (fboundp 'htmlize-region))
+      (if (eq (buffer-local-value 'major-mode (get-buffer (current-buffer)))
+              'processing-mode)
+          (save-excursion
+            (let ((htmlbuf (if (region-active-p)
+                               (htmlize-region (region-beginning) (region-end))
+                             (htmlize-buffer))))
+              (if arg
+                  (switch-to-buffer htmlbuf)
+                (with-current-buffer htmlbuf
+                  (clipboard-kill-ring-save (point-min) (point-max)))
+                (kill-buffer htmlbuf)
+                (message "Copied as HTML to clipboard"))))
+        (message (concat "Copy as HTML failed, because current "
+                         "buffer is not a Processing buffer.")))
+    (user-error "Please install the package htmlize from \
+http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi")))
 
 ;;;###autoload
 (define-derived-mode processing-mode
