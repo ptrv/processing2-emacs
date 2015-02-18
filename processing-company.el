@@ -35,7 +35,10 @@
                                  processing-constants)))
 
 (defun processing-company--init ()
-  (setq-local company-backends '((company-keywords :with company-yasnippet)))
+  (setq-local company-backends '((company-keywords
+                                  :with
+                                  company-yasnippet
+                                  company-dabbrev-code)))
   (make-local-variable 'company-keywords-alist)
   (add-to-list 'company-keywords-alist processing-company--keywords))
 
