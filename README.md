@@ -91,10 +91,12 @@ support to have keyword completion.
 
 The key-bindings are:
 
-    C-c C-p r    Run a sketch.
-    C-c C-p b    Compile a sketch into .class files.
-    C-c C-p p    Run a sketch full screen.
-    C-c C-p e    Export sketch.
-    C-c C-p d    Find in reference.
-    C-c C-p f    Find or create sketch.
-    C-c C-p s    Search in Processing forum.
+ Key bindings            | Description
+-------------------------|-------------------------------------
+ <kbd>C-c C-p r</kbd>    | Run a sketch.
+ <kbd>C-c C-p b</kbd>    | Compile a sketch into .class files.
+ <kbd>C-c C-p p</kbd>    | Run a sketch full screen.
+ <kbd>C-c C-p e</kbd>    | Export sketch.
+ <kbd>C-c C-p d</kbd>    | Find in reference.
+ <kbd>C-c C-p f</kbd>    | Find or create sketch.
+ <kbd>C-c C-p s</kbd>    | Search in Processing forum.
