@@ -1,4 +1,4 @@
-;;; flycheck-processing.el --- Flycheck checker for processing-mode  -*- lexical-binding: t; -*-
+;;; flycheck-processing.el --- Flycheck checker for processing-mode
 
 ;; Copyright (C) 2015  Peter Vasil
 
