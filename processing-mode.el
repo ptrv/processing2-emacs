@@ -299,7 +299,7 @@ When calle interactively, prompt the user for QUERY."
 (defun processing-find-in-reference ()
   "Find word under cursor in Processing reference."
   (interactive)
-  (processing--open-query-in-reference (thing-at-point 'word)))
+  (processing--open-query-in-reference (thing-at-point 'symbol)))
 
 (defun processing-open-reference ()
   "Open Processing reference."
