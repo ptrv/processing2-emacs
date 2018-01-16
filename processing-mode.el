@@ -141,24 +141,24 @@ must be set to one of \"windows\", \"macosx\", or \"linux\". If
 no platform is selected, the default platform that Emacs is
 running on will be selected."
   (let* ((sketch-name (expand-file-name sketch-dir))
-         (cmd-type (if (symbolp 'cmd) (symbol-name cmd) cmd))
+         (cmd-type (if (symbolp cmd) (symbol-name cmd) cmd))
          (run-out-dir (expand-file-name output-dir))
-         (run-opts (concat " --output="
-                           (shell-quote-argument run-out-dir)))
+         (run-opts (list (concat "--output=" run-out-dir)))
          (export? (if (string= cmd-type "export") t nil))
          (export-platform (if platform platform processing-platform))
          (export-bits (if bits bits processing-platform-bits))
          (export-out-dir (expand-file-name
                           (concat (file-name-as-directory sketch-dir)
                                   "application." export-platform)))
-         (export-opts (concat " --platform=" export-platform
-                              " --bits=" export-bits
-                              " --output="
-                              (shell-quote-argument export-out-dir))))
-    (concat processing-location
-            " --force --sketch=" (shell-quote-argument sketch-name)
-            " --" cmd-type
-            (if export? export-opts run-opts))))
+         (export-opts (list (concat "--platform=" export-platform)
+                            (concat "--bits=" export-bits)
+                            (concat "--output=" export-out-dir))))
+    (combine-and-quote-strings
+     `(,processing-location
+       "--force"
+       ,(concat "--sketch=" sketch-name)
+       ,(concat "--" cmd-type)
+       ,@(if export? export-opts run-opts)))))
 
 (defun processing-commander (sketch-dir output-dir cmd &optional platform bits)
   "Run the Processing compiler, using a `compile-command'.
